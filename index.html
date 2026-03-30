@@ -90,7 +90,7 @@
         .btn-pink { background: var(--pink); }
         .btn-dark { background: #2b2b4d; }
 
-        /* --- VISTA LECTURA (SIMÉTRICA) --- */
+        /* --- VISTA LECTURA --- */
         #read-view {
             display: none;
             position: fixed;
@@ -98,7 +98,7 @@
             background: #0d0d1a;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Centrado vertical */
+            justify-content: center;
             padding: 20px;
             z-index: 500;
         }
@@ -163,31 +163,20 @@
             display: flex;
             justify-content: space-between;
             padding: 0 20px;
-            pointer-events: none;
+            z-index: 10;
         }
-        .game-btn {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 10px;
-            pointer-events: auto;
-            font-size: 0.8rem;
-        }
-
-        /* NUEVOS ESTILOS SCORE */
-        .score-board {
+        
+        .scoreboard-online {
             position: absolute;
-            top: 65px;
+            top: 70px;
             width: 100%;
             text-align: center;
             color: white;
             font-size: 0.8rem;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.5);
             padding: 5px 0;
-            z-index: 700;
+            z-index: 5;
         }
-        .challenge-msg { color: #ffeb3b; font-weight: bold; display: block; margin-bottom: 2px; }
 
         #warning-card {
             display: none;
@@ -199,6 +188,7 @@
             border-radius: 20px;
             text-align: center;
             border: 4px solid red;
+            z-index: 1000;
         }
 
         @keyframes rotateRing {
@@ -264,15 +254,14 @@
         <button class="btn btn-dark" style="margin-top: 30px;" onclick="location.reload()">Volver al Menú</button>
     </div>
 
-    <!-- JUEGO -->
+    <!-- JUEGO ONLINE -->
     <div id="game-view">
         <div class="game-ui">
-            <button class="game-btn" onclick="location.reload()">⬅ Menú</button>
+            <button class="btn btn-dark" style="padding:5px 15px" onclick="location.reload()">⬅ Menú</button>
             <div style="color:white; font-weight:bold;">Puntos: <span id="score">0</span></div>
         </div>
-        <!-- TABLA DE RÉCORDS -->
-        <div class="score-board">
-            <span id="vs-msg" class="challenge-msg"></span>
+        <div class="scoreboard-online">
+            <div id="vs-msg" style="color:#ffeb3b; margin-bottom:2px">Cargando récords...</div>
             Negrito: <span id="rec-negrito">0</span> | Negrita: <span id="rec-negrita">0</span>
         </div>
         <canvas id="gameCanvas"></canvas>
@@ -282,10 +271,9 @@
         </div>
     </div>
 
-    <!-- MODAL TUTORIAL JUEGO -->
+    <!-- SELECCIÓN DE JUGADOR -->
     <div id="game-tutorial" class="modal">
         <div class="modal-content">
-            <div style="font-size: 3.5rem;">🙋‍♂️</div>
             <h2>¿Quién juega hoy?</h2>
             <div style="display:flex; flex-direction:column; gap:10px; margin-top:15px;">
                 <button class="btn btn-dark" onclick="startGameNow('negrito')">Soy Negrito 🧔</button>
@@ -294,25 +282,88 @@
         </div>
     </div>
 
-    <script>
-        const INICIO = new Date('2024-03-27T00:00:00');
-        let currentPlayer = "";
+    <script type="module">
+        // --- FIREBASE SETUP ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // --- HORA Y FECHA REAL ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyD8rVdmblZtsQY02CiUfUNmTZ9yDaSL11A",
+            authDomain: "juegotos-f5e3d.firebaseapp.com",
+            projectId: "juegotos-f5e3d",
+            storageBucket: "juegotos-f5e3d.firebasestorage.app",
+            messagingSenderId: "34062509722",
+            appId: "1:34062509722:web:d342cd06f68246fb536123"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- VARIABLES ---
+        let currentPlayer = "";
+        let globalScores = { negrito: 0, negrita: 0 };
+
+        // --- TU CONTADOR ORIGINAL ---
+        const INICIO = new Date('2024-03-27T00:00:00');
+        
         function updateTimer() {
             const ahora = new Date();
             const años = ahora.getFullYear() - INICIO.getFullYear();
             const dias = ahora.getDate(); // 27 hoy
+            
+            // Usamos horas/min/seg locales para que sea 100% exacto a tu reloj
             const h = ahora.getHours(); 
             const m = ahora.getMinutes();
             const s = ahora.getSeconds();
-            document.getElementById('time-display').innerHTML = `${años} Años y ${dias} Días<br>${h}h ${m}m ${s}s`;
+
+            document.getElementById('time-display').innerHTML = 
+                `${años} Años y ${dias} Días<br>${h}h ${m}m ${s}s`;
         }
         setInterval(updateTimer, 1000);
         updateTimer();
 
+        // --- SINCRONIZACIÓN ONLINE ---
+        onSnapshot(doc(db, "competencia", "puntos"), (docSnap) => {
+            if (docSnap.exists()) {
+                globalScores = docSnap.data();
+                document.getElementById('rec-negrito').innerText = globalScores.negrito || 0;
+                document.getElementById('rec-negrita').innerText = globalScores.negrita || 0;
+                updateVsMsg();
+            }
+        });
+
+        function updateVsMsg() {
+            const msg = document.getElementById('vs-msg');
+            if (!currentPlayer) return;
+            const miPuntaje = globalScores[currentPlayer] || 0;
+            const otro = currentPlayer === 'negrito' ? 'negrita' : 'negrito';
+            const suPuntaje = globalScores[otro] || 0;
+
+            if (suPuntaje > miPuntaje) {
+                msg.innerText = `🔥 ¡Supéralo! Te llevan ventaja de ${suPuntaje - miPuntaje} pts`;
+            } else {
+                msg.innerText = "⭐ ¡Vas liderando la competencia!";
+            }
+        }
+
+        async function saveScore(score) {
+            const key = currentPlayer;
+            if (score > (globalScores[key] || 0)) {
+                await setDoc(doc(db, "competencia", "puntos"), { [key]: score }, { merge: true });
+            }
+        }
+
+        // --- MODALES Y NAVEGACIÓN ---
         if(new Date().getDate() === 27) document.getElementById('anniversary-modal').style.display = 'flex';
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+        window.startRead = () => {
+            document.getElementById('main-view').style.display = 'none';
+            document.getElementById('read-view').style.display = 'flex';
+        };
+        window.showTutorial = () => {
+            document.getElementById('main-view').style.display = 'none';
+            document.getElementById('game-tutorial').style.display = 'flex';
+        };
 
         // --- ÁRBOL ---
         const tCanvas = document.getElementById('treeCanvas');
@@ -334,42 +385,21 @@
         }
         drawTree();
 
-        function startRead() {
-            document.getElementById('main-view').style.display = 'none';
-            document.getElementById('read-view').style.display = 'flex';
-        }
-
         // --- LÓGICA JUEGO ---
         const gCanvas = document.getElementById('gameCanvas');
         const gCtx = gCanvas.getContext('2d');
         let playerX = 150, score = 0, gameActive = false, items = [];
 
-        function showTutorial() {
-            document.getElementById('main-view').style.display = 'none';
-            document.getElementById('game-tutorial').style.display = 'flex';
-        }
-
-        function startGameNow(player) {
+        window.startGameNow = (player) => {
             currentPlayer = player;
             closeModal('game-tutorial');
             document.getElementById('game-view').style.display = 'block';
-            
-            // Cargar scores
-            let rNegrito = localStorage.getItem('rec_negrito') || 0;
-            let rNegrita = localStorage.getItem('rec_negrita') || 0;
-            document.querySelectorAll('#rec-negrito').forEach(el => el.innerText = rNegrito);
-            document.querySelectorAll('#rec-negrita').forEach(el => el.innerText = rNegrita);
-
-            // Mensaje de reto
-            const msg = document.getElementById('vs-msg');
-            if(player === 'negrito' && rNegrita > rNegrito) msg.innerText = `¡Supera a Negrita (${rNegrita})!`;
-            else if(player === 'negrita' && rNegrito > rNegrita) msg.innerText = `¡Supera a Negrito (${rNegrito})!`;
-            else msg.innerText = "¡Eres el mejor!";
-
             gCanvas.width = window.innerWidth; gCanvas.height = window.innerHeight;
             playerX = gCanvas.width / 2;
-            gameActive = true; gameLoop();
-        }
+            gameActive = true; 
+            updateVsMsg();
+            gameLoop();
+        };
 
         gCanvas.addEventListener('touchmove', (e) => { if(gameActive) playerX = e.touches[0].clientX; });
 
@@ -377,6 +407,8 @@
             if(!gameActive) return;
             gCtx.fillStyle = '#050510'; gCtx.fillRect(0,0,gCanvas.width, gCanvas.height);
             gCtx.font = "55px serif"; gCtx.textAlign = "center";
+            
+            // Ella siempre es el jugador
             gCtx.fillText("👸🏾", playerX, gCanvas.height - 80);
 
             if(Math.random() < 0.03) {
@@ -397,20 +429,15 @@
                     if(it.isMe) {
                         score++; 
                         document.getElementById('score').innerText = score;
-                        
-                        // Guardar récord actual
-                        let key = currentPlayer === 'negrito' ? 'rec_negrito' : 'rec_negrita';
-                        let currentHigh = localStorage.getItem(key) || 0;
-                        if(score > currentHigh) {
-                            localStorage.setItem(key, score);
-                        }
-                        
+                        saveScore(score);
                         items.splice(i, 1);
                     } else {
                         gameActive = false;
                         document.getElementById('warning-card').style.display = 'block';
                         setTimeout(() => { 
                             document.getElementById('warning-card').style.display = 'none'; 
+                            score = 0;
+                            document.getElementById('score').innerText = 0;
                             gameActive = true; items = []; gameLoop();
                         }, 1500);
                         return;
@@ -423,4 +450,5 @@
     </script>
 </body>
 </html>
+
 
