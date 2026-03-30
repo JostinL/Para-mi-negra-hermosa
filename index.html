@@ -175,6 +175,20 @@
             font-size: 0.8rem;
         }
 
+        /* NUEVOS ESTILOS SCORE */
+        .score-board {
+            position: absolute;
+            top: 65px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-size: 0.8rem;
+            background: rgba(0,0,0,0.4);
+            padding: 5px 0;
+            z-index: 700;
+        }
+        .challenge-msg { color: #ffeb3b; font-weight: bold; display: block; margin-bottom: 2px; }
+
         #warning-card {
             display: none;
             position: absolute;
@@ -256,6 +270,11 @@
             <button class="game-btn" onclick="location.reload()">⬅ Menú</button>
             <div style="color:white; font-weight:bold;">Puntos: <span id="score">0</span></div>
         </div>
+        <!-- TABLA DE RÉCORDS -->
+        <div class="score-board">
+            <span id="vs-msg" class="challenge-msg"></span>
+            Negrito: <span id="rec-negrito">0</span> | Negrita: <span id="rec-negrita">0</span>
+        </div>
         <canvas id="gameCanvas"></canvas>
         <div id="warning-card">
             <div style="font-size:2.5rem">😡</div>
@@ -267,28 +286,27 @@
     <div id="game-tutorial" class="modal">
         <div class="modal-content">
             <div style="font-size: 3.5rem;">🙋‍♂️</div>
-            <h2>¡Este soy yo!</h2>
-            <p>Solo puedes atraparme a mí. ¡Los demás a la basura! 🗑️</p>
-            <button class="btn btn-pink" style="margin-top:15px" onclick="startGameNow()">¡Empezar!</button>
+            <h2>¿Quién juega hoy?</h2>
+            <div style="display:flex; flex-direction:column; gap:10px; margin-top:15px;">
+                <button class="btn btn-dark" onclick="startGameNow('negrito')">Soy Negrito 🧔</button>
+                <button class="btn btn-pink" onclick="startGameNow('negrita')">Soy Negrita 👸🏾</button>
+            </div>
         </div>
     </div>
 
     <script>
         const INICIO = new Date('2024-03-27T00:00:00');
+        let currentPlayer = "";
 
         // --- HORA Y FECHA REAL ---
         function updateTimer() {
             const ahora = new Date();
             const años = ahora.getFullYear() - INICIO.getFullYear();
             const dias = ahora.getDate(); // 27 hoy
-            
-            // Usamos horas/min/seg locales para que sea 100% exacto a tu reloj
             const h = ahora.getHours(); 
             const m = ahora.getMinutes();
             const s = ahora.getSeconds();
-
-            document.getElementById('time-display').innerHTML = 
-                `${años} Años y ${dias} Días<br>${h}h ${m}m ${s}s`;
+            document.getElementById('time-display').innerHTML = `${años} Años y ${dias} Días<br>${h}h ${m}m ${s}s`;
         }
         setInterval(updateTimer, 1000);
         updateTimer();
@@ -331,9 +349,23 @@
             document.getElementById('game-tutorial').style.display = 'flex';
         }
 
-        function startGameNow() {
+        function startGameNow(player) {
+            currentPlayer = player;
             closeModal('game-tutorial');
             document.getElementById('game-view').style.display = 'block';
+            
+            // Cargar scores
+            let rNegrito = localStorage.getItem('rec_negrito') || 0;
+            let rNegrita = localStorage.getItem('rec_negrita') || 0;
+            document.querySelectorAll('#rec-negrito').forEach(el => el.innerText = rNegrito);
+            document.querySelectorAll('#rec-negrita').forEach(el => el.innerText = rNegrita);
+
+            // Mensaje de reto
+            const msg = document.getElementById('vs-msg');
+            if(player === 'negrito' && rNegrita > rNegrito) msg.innerText = `¡Supera a Negrita (${rNegrita})!`;
+            else if(player === 'negrita' && rNegrito > rNegrita) msg.innerText = `¡Supera a Negrito (${rNegrito})!`;
+            else msg.innerText = "¡Eres el mejor!";
+
             gCanvas.width = window.innerWidth; gCanvas.height = window.innerHeight;
             playerX = gCanvas.width / 2;
             gameActive = true; gameLoop();
@@ -363,7 +395,16 @@
                 gCtx.fillText(it.sticker, it.x, it.y);
                 if(it.y > gCanvas.height - 130 && Math.abs(it.x - playerX) < 50) {
                     if(it.isMe) {
-                        score++; document.getElementById('score').innerText = score;
+                        score++; 
+                        document.getElementById('score').innerText = score;
+                        
+                        // Guardar récord actual
+                        let key = currentPlayer === 'negrito' ? 'rec_negrito' : 'rec_negrita';
+                        let currentHigh = localStorage.getItem(key) || 0;
+                        if(score > currentHigh) {
+                            localStorage.setItem(key, score);
+                        }
+                        
                         items.splice(i, 1);
                     } else {
                         gameActive = false;
@@ -382,3 +423,4 @@
     </script>
 </body>
 </html>
+
