@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Para Mi Hermosa</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&family=Press+Start+2P&display=swap');
 
         :root {
             --bg: #0a0a1a;
@@ -13,198 +13,119 @@
             --brown: #4a342e;
             --pink: #ff4d6d;
             --gold: #d4af37;
+            --arcade-green: #00ff00;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            height: 100vh;
+            font-family: 'Poppins', sans-serif; height: 100vh;
             background: radial-gradient(circle, #1a1a35 0%, #050510 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            color: var(--brown);
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; color: var(--brown);
         }
 
-        /* --- MODALES --- */
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.9);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-        }
+        .retro-font { font-family: 'Press Start 2P', monospace !important; }
 
-        .modal-content {
-            background: var(--card);
-            padding: 25px;
-            border-radius: 30px;
-            border: 3px solid var(--pink);
-            max-width: 320px;
+        /* --- TICKET ROMÁNTICO FLOTANTE (DISEÑO ORIGINAL) --- */
+        .floating-container {
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
         }
+        .ticket-visual {
+            width: 95px; height: 55px; background: #fff9fa; cursor: pointer;
+            border: 2px solid var(--pink); border-radius: 8px;
+            display: flex; box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+            animation: float 3s ease-in-out infinite;
+        }
+        .ticket-left {
+            flex: 2; display: flex; flex-direction: column; justify-content: center;
+            align-items: center; font-weight: 900; font-size: 0.65rem; color: var(--brown); border-right: 2px dashed var(--pink);
+        }
+        .ticket-right {
+            flex: 1; background: var(--pink); display: flex; justify-content: center;
+            align-items: center; font-size: 1.2rem; color: white; border-radius: 0 6px 6px 0;
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(2deg); } 50% { transform: translateY(-6px) rotate(-2deg); } }
 
-        /* --- TARJETA PRINCIPAL --- */
-        .card {
-            background: var(--card);
-            width: 90%;
-            max-width: 360px;
-            border-radius: 40px;
-            padding: 25px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-            text-align: center;
-        }
+        /* --- BÓVEDA DE CUPONES --- */
+        #vault-view { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 1500; padding: 20px; overflow-y: auto; color: white; }
+        .coupon-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; padding-bottom: 20px;}
+        .coupon-item { background: white; border-radius: 15px; display: flex; padding: 15px; color: var(--brown); opacity: 0.5; filter: grayscale(1); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .coupon-item.unlocked { opacity: 1; filter: grayscale(0); border: 2px solid var(--gold); }
+        .coupon-icon { font-size: 2.2rem; margin-right: 15px; display: flex; align-items: center; width: 45px; justify-content: center;}
+        .coupon-details h3 { color: var(--pink); font-size: 1.1rem; margin-bottom: 5px; }
+        .coupon-details p { font-size: 0.8rem; font-style: italic; color: #666; }
 
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-        
-        #treeCanvas { width: 150px; height: 150px; }
+        /* --- MODALES ROMÁNTICOS --- */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; text-align: center; padding: 20px; }
+        .modal-content { background: var(--card); padding: 25px; border-radius: 30px; border: 3px solid var(--pink); max-width: 340px; width: 100%; box-shadow: 0 10px 30px rgba(255, 77, 109, 0.3); }
 
-        .timer-box {
-            background: rgba(255, 77, 109, 0.08);
-            padding: 15px;
-            border-radius: 20px;
-            margin: 15px 0;
-        }
+        .btn-arcade-soft { background: transparent; border: 2px solid var(--pink); color: var(--pink); font-family: 'Press Start 2P', monospace; font-size: 0.65rem; padding: 15px; width: 100%; cursor: pointer; margin-top: 10px; transition: 0.2s; border-radius: 15px; }
+        .btn-arcade-soft:active { background: var(--pink); color: white; }
+        .btn-queen { background: var(--pink); border: 2px solid var(--gold); color: white; font-size: 0.75rem; padding: 20px; box-shadow: 0 0 15px rgba(255, 77, 109, 0.5); animation: pulse-queen 2s infinite; }
+        @keyframes pulse-queen { 0% { box-shadow: 0 0 10px var(--pink); } 50% { box-shadow: 0 0 20px var(--gold); } 100% { box-shadow: 0 0 10px var(--pink); } }
+
+        /* --- TARJETA PRINCIPAL (DISEÑO ORIGINAL INTACTO) --- */
+        .card { background: var(--card); width: 90%; max-width: 360px; border-radius: 40px; padding: 25px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); text-align: center; }
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+        #treeCanvas { width: 150px; height: 150px; cursor: pointer; } 
+        .timer-box { background: rgba(255, 77, 109, 0.08); padding: 15px; border-radius: 20px; margin: 15px 0; }
         .timer-box strong { display: block; font-size: 1.15rem; color: var(--pink); margin-top: 5px; }
-
         .btn-group { display: flex; gap: 10px; justify-content: center; }
-        .btn {
-            padding: 12px 25px;
-            border-radius: 50px;
-            border: none;
-            font-weight: 600;
-            color: white;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
+        .btn { padding: 12px 25px; border-radius: 50px; border: none; font-weight: 600; color: white; cursor: pointer; transition: 0.2s;}
+        .btn:active { transform: scale(0.95); }
         .btn-pink { background: var(--pink); }
         .btn-dark { background: #2b2b4d; }
 
         /* --- VISTA LECTURA --- */
-        #read-view {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: #0d0d1a;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            z-index: 500;
-        }
+        #read-view { display: none; position: fixed; inset: 0; background: #0d0d1a; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 500; }
+        .poem-container { max-width: 340px; text-align: center; margin-bottom: 20px; }
+        .poem-text { color: #f5e8dc; font-size: 1rem; line-height: 1.5; font-style: italic; }
+        .ring-section { display: flex; flex-direction: column; align-items: center; margin-top: 10px; }
+        .ring-container { width: 100px; height: 80px; perspective: 500px; display: flex; justify-content: center; align-items: center; }
+        .ring-3d { width: 70px; height: 35px; border: 5px solid #e0e0e0; border-radius: 50%; position: relative; transform-style: preserve-3d; animation: rotateRing 4s linear infinite; }
+        .diamond { width: 15px; height: 15px; background: #b9f2ff; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); position: absolute; top: -10px; left: 50%; transform: translateX(-50%); box-shadow: 0 0 10px white; }
 
-        .poem-container {
-            max-width: 340px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .poem-text {
-            color: #f5e8dc;
-            font-size: 1rem;
-            line-height: 1.5;
-            font-style: italic;
-        }
-
-        .ring-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .ring-container {
-            width: 100px;
-            height: 80px;
-            perspective: 500px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .ring-3d {
-            width: 70px;
-            height: 35px;
-            border: 5px solid #e0e0e0;
-            border-radius: 50%;
-            position: relative;
-            transform-style: preserve-3d;
-            animation: rotateRing 4s linear infinite;
-        }
-
-        .diamond {
-            width: 15px; height: 15px;
-            background: #b9f2ff;
-            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-            position: absolute;
-            top: -10px; left: 50%;
-            transform: translateX(-50%);
-            box-shadow: 0 0 10px white;
-        }
-
-        /* --- JUEGO --- */
-        #game-view { display: none; position: fixed; inset: 0; background: #050510; z-index: 600; }
-        #gameCanvas { width: 100%; height: 100%; }
+        /* --- JUEGO ONLINE --- */
+        #game-view { display: none; position: fixed; inset: 0; background: #000; z-index: 600; }
+        #gameCanvas { width: 100%; height: 100%; display: block; }
         
-        .game-ui {
-            position: absolute;
-            top: 20px;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 20px;
-            z-index: 10;
-        }
+        .game-ui { position: absolute; top: 15px; width: 100%; display: flex; justify-content: space-between; padding: 0 15px; z-index: 10; font-size: 0.6rem; color: var(--arcade-green); align-items: flex-start;}
+        .ui-left { display: flex; flex-direction: column; gap: 5px; }
+        .ui-right { text-align: right; }
+        #lives-display { font-size: 1.2rem; letter-spacing: 2px; }
+        .power-container { width: 100px; height: 12px; border: 2px solid white; margin-top: 5px; border-radius: 5px; overflow: hidden;}
+        .power-fill { width: 0%; height: 100%; background: var(--pink); transition: 0.1s; }
         
-        .scoreboard-online {
-            position: absolute;
-            top: 70px;
-            width: 100%;
-            text-align: center;
-            color: white;
-            font-size: 0.8rem;
-            background: rgba(0,0,0,0.5);
-            padding: 5px 0;
-            z-index: 5;
+        #super-btn { 
+            display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--pink); color: white; border: 4px solid var(--gold); 
+            padding: 15px 30px; border-radius: 30px; font-size: 0.8rem; z-index: 1000;
+            animation: pulse-queen 0.5s infinite; cursor: pointer; font-family: 'Press Start 2P';
+            box-shadow: 0 10px 20px rgba(255,0,0,0.5); text-align: center; width: 80%; max-width: 300px;
         }
 
-        #warning-card {
-            display: none;
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            border-radius: 20px;
-            text-align: center;
-            border: 4px solid red;
-            z-index: 1000;
-        }
+        .scoreboard-online { position: absolute; top: 60px; width: 100%; text-align: center; color: white; font-size: 0.55rem; background: rgba(0,0,0,0.8); border-bottom: 2px solid var(--arcade-green); padding: 8px 0; z-index: 5;}
+        #boss-warning { display: none; position: absolute; top: 40%; left: 50%; width: 100%; transform: translate(-50%, -50%); text-align: center; color: red; font-size: 1.3rem; animation: pulse 0.5s infinite; z-index: 800; text-shadow: 2px 2px 0 #fff; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        @keyframes rotateRing {
-            0% { transform: rotateY(0deg) rotateX(25deg); }
-            100% { transform: rotateY(360deg) rotateX(25deg); }
-        }
+        #admin-panel { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 5000; justify-content: center; align-items: center; padding: 20px; }
+        .admin-box { background: #0d1117; border: 2px solid #00ff00; color: #00ff00; font-family: monospace; padding: 20px; width: 100%; max-width: 340px; text-align: left; }
+        .admin-select { width: 100%; padding: 10px; background: #161b22; color: #00ff00; border: 1px solid #00ff00; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <!-- MODAL ANIVERSARIO -->
-    <div id="anniversary-modal" class="modal">
-        <div class="modal-content">
-            <h1 style="font-family:'Dancing Script'; color:var(--pink); font-size:2.2rem;">¡Feliz Mes, Mi Amor!</h1>
-            <p>Otro mes a tu lado siendo el hombre más feliz. Te amo mujer de mi vida. ❤️</p>
-            <button class="btn btn-pink" style="margin-top:15px" onclick="closeModal('anniversary-modal')">Te amo</button>
+    <!-- REPRODUCTORES DE MÚSICA -->
+    <audio id="audio-poema" loop src="https://cdn.pixabay.com/download/audio/2023/12/12/audio_731388ae30.mp3?filename=p-r-i-d-e-o-f-u-s-179831.mp3"></audio>
+    <audio id="audio-game" loop src="https://cdn.pixabay.com/download/audio/2022/01/21/audio_51d54b4f53.mp3?filename=8-bit-arcade-game-138827.mp3"></audio>
+
+    <!-- TICKET FLOTANTE (RESTAURADO) -->
+    <div class="floating-container" id="ticket-ui">
+        <div class="ticket-visual" onclick="openVault()">
+            <div class="ticket-left">TICKET DE<br><span style="font-size:1.1rem; color:var(--pink)">Amor</span></div>
+            <div class="ticket-right">❤️</div>
         </div>
     </div>
 
@@ -216,20 +137,127 @@
                     <h2 style="font-size: 1.1rem; color: var(--pink);">Hola, Mi Hermosa</h2>
                     <p style="font-size: 0.85rem; margin-top: 3px;">Un detalle para la dueña de mi corazón.</p>
                 </div>
-                <canvas id="treeCanvas"></canvas>
+                <!-- CANVAS RESTAURADO A TAMAÑO ORIGINAL -->
+                <canvas id="treeCanvas" width="150" height="150" onclick="adminTouch()"></canvas>
             </div>
             <div class="timer-box">
                 Caminando juntos desde hace:
                 <strong id="time-display">Cargando...</strong>
             </div>
             <div class="btn-group">
-                <button class="btn btn-pink" onclick="showTutorial()">Jugar</button>
+                <button class="btn btn-pink retro-font" style="font-size: 0.6rem; padding: 15px 20px;" onclick="showTutorial()">JUGAR</button>
                 <button class="btn btn-dark" onclick="startRead()">Leer</button>
             </div>
         </div>
     </div>
 
-    <!-- PANTALLA LECTURA -->
+    <!-- MENÚ SELECCIÓN JUGADOR -->
+    <div id="game-tutorial" class="modal">
+        <div class="modal-content">
+            <h2 style="color: var(--pink); font-family: 'Dancing Script'; font-size: 2.5rem; margin-bottom: 5px;">Misión Rescate</h2>
+            <p style="font-size:0.8rem; margin-bottom:15px; color:#666;">Selecciona a tu protagonista.</p>
+            
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <button class="btn-arcade-soft btn-queen" onclick="prepareMission('negrita')">⭐ SOY NEGRITA 👸🏾 ⭐</button>
+                <button class="btn-arcade-soft" style="color:var(--brown); border-color:var(--brown);" onclick="prepareMission('negrito')">SOY NEGRITO 🧔</button>
+                
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <button class="btn-arcade-soft" style="flex:1; border-style:dashed; padding:10px; font-size:0.55rem;" onclick="openRules()">📜 REGLAS</button>
+                    <!-- FIX: Volver suavemente al menú -->
+                    <button class="btn-arcade-soft" style="flex:1; background:#eee; color:#333; border:none; padding:10px; font-size:0.55rem;" onclick="closeGameToMenu('game-tutorial')">⬅ VOLVER</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGLAS -->
+    <div id="rules-modal" class="modal">
+        <div class="modal-content" style="text-align: left;">
+            <h2 style="color:var(--gold); font-family:'Dancing Script'; text-align:center; font-size:2rem; margin-bottom: 15px;">Cómo Jugar</h2>
+            <ul style="font-size:0.8rem; margin:10px 0; line-height:1.6; color: var(--brown); list-style: none; padding:0;">
+                <li style="margin-bottom:8px;">🎯 <b>Misión:</b> Atrapa a tu pareja. Esquiva los 🤡 y 👽.</li>
+                <li style="margin-bottom:8px;">❤️ <b>Vidas:</b> Tienes 3 vidas. Busca corazones (💖) para curarte.</li>
+                <li style="margin-bottom:8px;">⚡ <b>Bonus:</b> El corazón dorado (💛) te da 3 pts y mucha energía. ¡Ojo con el fantasma (👻) que te persigue!</li>
+                <li style="margin-bottom:8px;">💥 <b>Bomba:</b> La barra carga sola. Cuando salga el botón abajo, tócalo para explotar todo.</li>
+                <li>👹 <b>Jefes:</b> Salen cada 100 pts. Son listos, te persiguen. Atrapa lo que sueltan para ganar.</li>
+            </ul>
+            <button class="btn btn-pink" style="width:100%; margin-top:10px;" onclick="closeModal('rules-modal')">¡Entendido!</button>
+        </div>
+    </div>
+
+    <!-- MODAL GAME OVER -->
+    <div id="game-over-modal" class="modal">
+        <div class="modal-content">
+            <h2 style="color:red; font-family:'Press Start 2P'; font-size:1.2rem; margin-bottom:15px;">GAME OVER</h2>
+            <div style="font-size:3rem; margin-bottom:10px;">💀</div>
+            <p style="font-size:0.85rem; color:var(--brown); margin-bottom:20px;">Te has quedado sin vidas, amor.</p>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <button class="btn btn-pink retro-font" style="font-size:0.6rem; padding:15px;" onclick="restartGame()">REINTENTAR</button>
+                <!-- FIX: Volver suavemente al menú principal -->
+                <button class="btn btn-dark retro-font" style="font-size:0.6rem; padding:15px;" onclick="closeGameToMenu('game-over-modal')">MENÚ PRINCIPAL</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="mission-modal" class="modal">
+        <div class="modal-content">
+            <h2 style="color:var(--pink); font-family:'Dancing Script'; font-size:2.2rem;">Prepárate</h2>
+            <div id="mission-emoji" style="font-size:4rem; margin:15px 0; font-family: serif;"></div>
+            <p id="mission-text" style="color:var(--brown); font-size:0.85rem; line-height:1.5; margin-bottom:20px;"></p>
+            <button class="btn btn-pink retro-font" style="width:100%; font-size:0.6rem; padding:15px;" onclick="startMission()">INICIAR</button>
+        </div>
+    </div>
+
+    <!-- JUEGO ONLINE -->
+    <div id="game-view">
+        <div class="game-ui retro-font">
+            <div class="ui-left">
+                <div id="lives-display">❤️❤️❤️</div>
+                <div class="power-container"><div id="power-bar" class="power-fill"></div></div>
+            </div>
+            <div class="ui-right">
+                <div>SCORE: <span id="score">0</span></div>
+            </div>
+        </div>
+        
+        <button id="super-btn" ontouchstart="activateSuperPower()" onclick="activateSuperPower()">¡SUPER BOMBA!</button>
+
+        <div id="scoreboard-normal" class="scoreboard-online retro-font">
+            <div id="vs-msg" style="color:#ffeb3b; margin-bottom:6px">LOADING...</div>
+            🧔 <span id="rec-negrito">0</span> | 👸🏾 <span id="rec-negrita">0</span>
+        </div>
+        
+        <div id="boss-warning" class="retro-font">DANGER!<br>JEFE FINAL</div>
+        <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <!-- BÓVEDA -->
+    <div id="vault-view">
+        <h2 style="font-family:'Dancing Script'; color:var(--pink); text-align:center; font-size:2.5rem;">Mis Cupones Reales</h2>
+        <div class="coupon-grid" id="coupon-container"></div>
+        <button class="btn btn-pink retro-font" style="width:100%; margin-top:20px; font-size:0.6rem;" onclick="closeVault()">VOLVER</button>
+    </div>
+
+    <div id="reward-modal" class="modal">
+        <div class="modal-content">
+            <h2 style="color:var(--gold); font-family:'Dancing Script'; font-size:2.2rem;">¡Jefe Derrotado!</h2>
+            <div id="reward-icon" style="font-size:4rem; margin:10px 0;">🎁</div>
+            <p id="reward-title" style="font-weight:bold; margin-bottom:5px; color:var(--brown)"></p>
+            <p id="reward-verse" style="font-size:0.8rem; font-style:italic; color:#666; border-top:1px solid #ddd; padding-top:10px;"></p>
+            <button class="btn btn-pink retro-font" style="margin-top:15px; width:100%; font-size:0.6rem; padding: 15px;" onclick="continueGame()">CONTINUAR</button>
+        </div>
+    </div>
+
+    <div id="wish-modal" class="modal">
+        <div class="modal-content">
+            <h2 style="color:var(--gold); font-family:'Dancing Script'; font-size:2.5rem;">✨ El Deseo ✨</h2>
+            <p style="font-size:0.85rem; color:var(--brown);">Escribe tu deseo absoluto en este cupón:</p>
+            <textarea id="wish-input" style="width:100%; height:80px; margin:15px 0; border-radius:10px; padding:10px; border: 2px solid var(--pink); resize:none; font-family:inherit;"></textarea>
+            <button class="btn btn-pink retro-font" style="width:100%; font-size:0.6rem; padding:15px;" onclick="saveWish()">SELLAR DESEO</button>
+        </div>
+    </div>
+
+    <!-- LECTURA -->
     <div id="read-view">
         <div class="poem-container">
             <p class="poem-text">
@@ -243,86 +271,92 @@
                 pronto te lo daré en la vida real. ❤️"
             </p>
         </div>
-        
         <div class="ring-section">
-            <div class="ring-container">
-                <div class="ring-3d"><div class="diamond"></div></div>
-            </div>
+            <div class="ring-container"><div class="ring-3d"><div class="diamond"></div></div></div>
             <p style="color: var(--gold); font-family: 'Dancing Script'; font-size: 1.6rem; margin-top: 5px;">Anillo de Promesa</p>
         </div>
-
-        <button class="btn btn-dark" style="margin-top: 30px;" onclick="location.reload()">Volver al Menú</button>
+        <!-- FIX: Botón de Volver ahora sí funciona perfectamente -->
+        <button class="btn btn-dark" style="margin-top: 30px;" onclick="closeRead()">Volver al Menú</button>
     </div>
 
-    <!-- JUEGO ONLINE -->
-    <div id="game-view">
-        <div class="game-ui">
-            <button class="btn btn-dark" style="padding:5px 15px" onclick="location.reload()">⬅ Menú</button>
-            <div style="color:white; font-weight:bold;">Puntos: <span id="score">0</span></div>
-        </div>
-        <div class="scoreboard-online">
-            <div id="vs-msg" style="color:#ffeb3b; margin-bottom:2px">Cargando récords...</div>
-            Negrito: <span id="rec-negrito">0</span> | Negrita: <span id="rec-negrita">0</span>
-        </div>
-        <canvas id="gameCanvas"></canvas>
-        <div id="warning-card">
-            <div style="font-size:2.5rem">😡</div>
-            <p style="color:red; font-weight:bold; margin-top: 10px;">¡Ese no soy yo! 😠</p>
-        </div>
-    </div>
-
-    <!-- SELECCIÓN DE JUGADOR -->
-    <div id="game-tutorial" class="modal">
-        <div class="modal-content">
-            <h2>¿Quién juega hoy?</h2>
-            <div style="display:flex; flex-direction:column; gap:10px; margin-top:15px;">
-                <button class="btn btn-dark" onclick="startGameNow('negrito')">Soy Negrito 🧔</button>
-                <button class="btn btn-pink" onclick="startGameNow('negrita')">Soy Negrita 👸🏾</button>
-            </div>
+    <!-- ADMIN -->
+    <div id="admin-panel">
+        <div class="admin-box">
+            <h3 style="border-bottom: 1px dashed #00ff00; padding-bottom:10px; margin-bottom:15px; text-align:center;">HACKER CONSOLE</h3>
+            <div id="admin-status" style="font-size:0.75rem; margin-bottom:15px; color:#aaa; line-height: 1.5;"></div>
+            <select id="admin-boss-select" class="admin-select"><option value="100">Boss 100</option><option value="200">Boss 200</option></select>
+            <button class="btn-arcade-soft" style="border-color:#00ff00; color:#00ff00; padding:10px" onclick="adminTestBoss()">EJECUTAR TEST</button>
+            <button class="btn-arcade-soft" style="color:#ff4d4d; border-color:#ff4d4d; margin-top: 20px; padding:10px;" onclick="adminResetScores()">RESET FIREBASE</button>
+            <button class="btn-arcade-soft" style="color:#ffa500; border-color:#ffa500; padding:10px;" onclick="adminResetCoupons()">RESET LOCAL DATA</button>
+            <button class="btn-arcade-soft" style="background:#444; color:#fff; border:none; margin-top:20px; padding:10px;" onclick="closeModal('admin-panel')">CERRAR</button>
         </div>
     </div>
 
     <script type="module">
-        // --- FIREBASE SETUP ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyD8rVdmblZtsQY02CiUfUNmTZ9yDaSL11A",
-            authDomain: "juegotos-f5e3d.firebaseapp.com",
-            projectId: "juegotos-f5e3d",
-            storageBucket: "juegotos-f5e3d.firebasestorage.app",
-            messagingSenderId: "34062509722",
-            appId: "1:34062509722:web:d342cd06f68246fb536123"
-        };
-
+        const firebaseConfig = { apiKey: "AIzaSyD8rVdmblZtsQY02CiUfUNmTZ9yDaSL11A", authDomain: "juegotos-f5e3d.firebaseapp.com", projectId: "juegotos-f5e3d", storageBucket: "juegotos-f5e3d.firebasestorage.app", messagingSenderId: "34062509722", appId: "1:34062509722:web:d342cd06f68246fb536123" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- VARIABLES ---
-        let currentPlayer = "";
-        let globalScores = { negrito: 0, negrita: 0 };
+        const PREMIOS = {
+            100: { t: "Cena donde ella elija", v: "Cantares 2:10", i: "🍕" }, 200: { t: "Hacerse las uñas", v: "Cantares 4:7", i: "💅" },
+            300: { t: "Masaje hecho por mi", v: "Rut 1:16", i: "💆‍♀️" }, 400: { t: "Salida a donde ella elija", v: "Proverbios 31:29", i: "🚗" },
+            500: { t: "Comida preparada por mi", v: "Salmos 143:8", i: "🍳" }, 600: { t: "Peluche que ella quiera", v: "1 Corintios 13:4", i: "🧸" },
+            700: { t: "Noche de cine juntos", v: "Eclesiastés 4:9", i: "🍿" }, 800: { t: "Tratamiento de Keratina", v: "Salmos 36:7", i: "💇‍♀️" },
+            900: { t: "El Tocador", v: "Cantares 8:7", i: "🪞" }, 1000: { t: "Tu Deseo Especial", v: "1 Juan 4:19", i: "✨" }
+        };
 
-        // --- TU CONTADOR ORIGINAL ---
-        const INICIO = new Date('2024-03-27T00:00:00');
-        
-        function updateTimer() {
-            const ahora = new Date();
-            const años = ahora.getFullYear() - INICIO.getFullYear();
-            const dias = ahora.getDate(); // 27 hoy
+        let currentPlayer = "", globalScores = { negrito: 0, negrita: 0 };
+        let miPersonaje = "👸🏾", miObjetivo = "🧔", isAdminTest = false;
+
+        const audioPoema = document.getElementById('audio-poema');
+        const audioJuego = document.getElementById('audio-game');
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const actx = new AudioContext();
+
+        function playSFX(type) {
+            if(actx.state === 'suspended') actx.resume();
+            const osc = actx.createOscillator();
+            const gain = actx.createGain();
+            osc.connect(gain); gain.connect(actx.destination);
             
-            // Usamos horas/min/seg locales para que sea 100% exacto a tu reloj
-            const h = ahora.getHours(); 
-            const m = ahora.getMinutes();
-            const s = ahora.getSeconds();
-
-            document.getElementById('time-display').innerHTML = 
-                `${años} Años y ${dias} Días<br>${h}h ${m}m ${s}s`;
+            const now = actx.currentTime;
+            if(type === 'coin') {
+                osc.type = 'sine'; osc.frequency.setValueAtTime(800, now); osc.frequency.exponentialRampToValueAtTime(1200, now+0.1);
+                gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now+0.1);
+                osc.start(now); osc.stop(now+0.1);
+            } else if(type === '1up') {
+                osc.type = 'square'; osc.frequency.setValueAtTime(400, now); osc.frequency.setValueAtTime(600, now+0.1); osc.frequency.setValueAtTime(800, now+0.2);
+                gain.gain.setValueAtTime(0.05, now); gain.gain.linearRampToValueAtTime(0, now+0.3);
+                osc.start(now); osc.stop(now+0.3);
+            } else if(type === 'hit') {
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, now); osc.frequency.exponentialRampToValueAtTime(50, now+0.3);
+                gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now+0.3);
+                osc.start(now); osc.stop(now+0.3);
+            } else if(type === 'explosion') {
+                osc.type = 'square'; osc.frequency.setValueAtTime(100, now); osc.frequency.exponentialRampToValueAtTime(10, now+0.5);
+                gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now+0.5);
+                osc.start(now); osc.stop(now+0.5);
+            }
         }
-        setInterval(updateTimer, 1000);
-        updateTimer();
 
-        // --- SINCRONIZACIÓN ONLINE ---
+        function playMusic(type) {
+            stopMusic();
+            if(actx.state === 'suspended') actx.resume();
+            if(type === 'poema') audioPoema.play().catch(e=>console.log("Audio block"));
+            if(type === 'juego') audioJuego.play().catch(e=>console.log("Audio block"));
+        }
+        function stopMusic() { audioPoema.pause(); audioJuego.pause(); audioPoema.currentTime = 0; audioJuego.currentTime = 0; }
+
+        const INICIO = new Date('2024-03-27T00:00:00');
+        function updateTimer() {
+            const ahora = new Date(), años = ahora.getFullYear() - INICIO.getFullYear(), dias = ahora.getDate(), h = ahora.getHours(), m = ahora.getMinutes(), s = ahora.getSeconds();
+            document.getElementById('time-display').innerHTML = `${años} Años y ${dias} Días<br>${h}h ${m}m ${s}s`;
+        }
+        setInterval(updateTimer, 1000); updateTimer();
+
         onSnapshot(doc(db, "competencia", "puntos"), (docSnap) => {
             if (docSnap.exists()) {
                 globalScores = docSnap.data();
@@ -333,122 +367,269 @@
         });
 
         function updateVsMsg() {
-            const msg = document.getElementById('vs-msg');
-            if (!currentPlayer) return;
-            const miPuntaje = globalScores[currentPlayer] || 0;
-            const otro = currentPlayer === 'negrito' ? 'negrita' : 'negrito';
-            const suPuntaje = globalScores[otro] || 0;
-
-            if (suPuntaje > miPuntaje) {
-                msg.innerText = `🔥 ¡Supéralo! Te llevan ventaja de ${suPuntaje - miPuntaje} pts`;
-            } else {
-                msg.innerText = "⭐ ¡Vas liderando la competencia!";
-            }
+            const msg = document.getElementById('vs-msg'); if (!currentPlayer) return;
+            const miPuntaje = globalScores[currentPlayer] || 0, otro = currentPlayer === 'negrito' ? 'negrita' : 'negrito', suPuntaje = globalScores[otro] || 0;
+            if (suPuntaje > miPuntaje) msg.innerText = `SUPÉRALO POR ${suPuntaje - miPuntaje}`; else msg.innerText = "¡LIDERANDO!";
         }
 
         async function saveScore(score) {
-            const key = currentPlayer;
-            if (score > (globalScores[key] || 0)) {
-                await setDoc(doc(db, "competencia", "puntos"), { [key]: score }, { merge: true });
-            }
+            if (isAdminTest) return; 
+            if (score > (globalScores[currentPlayer] || 0)) await setDoc(doc(db, "competencia", "puntos"), { [currentPlayer]: score }, { merge: true });
         }
 
-        // --- MODALES Y NAVEGACIÓN ---
-        if(new Date().getDate() === 27) document.getElementById('anniversary-modal').style.display = 'flex';
         window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+        window.openRules = () => document.getElementById('rules-modal').style.display = 'flex';
+        
         window.startRead = () => {
-            document.getElementById('main-view').style.display = 'none';
-            document.getElementById('read-view').style.display = 'flex';
+            document.getElementById('main-view').style.display = 'none'; document.getElementById('ticket-ui').style.display = 'none'; 
+            document.getElementById('read-view').style.display = 'flex'; playMusic('poema');
         };
+
+        // FIX: Transición suave de vuelta al menú (Sin recargar la página)
+        window.closeRead = () => {
+            stopMusic();
+            document.getElementById('read-view').style.display = 'none';
+            document.getElementById('main-view').style.display = 'block';
+            document.getElementById('ticket-ui').style.display = 'flex';
+        };
+
+        window.closeGameToMenu = (modalId) => {
+            closeModal(modalId);
+            stopMusic();
+            document.getElementById('game-view').style.display = 'none';
+            document.getElementById('main-view').style.display = 'block';
+            document.getElementById('ticket-ui').style.display = 'flex';
+            gameActive = false; // Detiene el bucle del juego
+        };
+        
         window.showTutorial = () => {
-            document.getElementById('main-view').style.display = 'none';
+            document.getElementById('main-view').style.display = 'none'; document.getElementById('ticket-ui').style.display = 'none';
             document.getElementById('game-tutorial').style.display = 'flex';
         };
 
-        // --- ÁRBOL ---
-        const tCanvas = document.getElementById('treeCanvas');
-        const tCtx = tCanvas.getContext('2d');
-        tCanvas.width = 160; tCanvas.height = 160;
+        window.openVault = () => {
+            document.getElementById('vault-view').style.display = 'block'; const container = document.getElementById('coupon-container'); container.innerHTML = '';
+            Object.keys(PREMIOS).forEach(pts => {
+                const isUnlocked = localStorage.getItem('coupon_'+pts), p = PREMIOS[pts], wishText = localStorage.getItem('deseo_1000');
+                container.innerHTML += `<div class="coupon-item ${isUnlocked ? 'unlocked' : ''}"><div class="coupon-icon">${isUnlocked ? p.i : '❓'}</div><div class="coupon-details"><h3 style="font-family:'Poppins'">${isUnlocked ? (pts === "1000" && wishText ? wishText : p.t) : 'Premio Sorpresa'}</h3><p>${isUnlocked ? p.v : 'Bloqueado.'}</p></div></div>`;
+            });
+        };
+        window.closeVault = () => document.getElementById('vault-view').style.display = 'none';
+
+        // --- DIBUJO DEL ÁRBOL RESTAURADO EXACTAMENTE AL ORIGINAL (150X150) ---
+        const tCanvas = document.getElementById('treeCanvas'), tCtx = tCanvas.getContext('2d');
         function drawTree() {
-            tCtx.clearRect(0,0,160,160);
-            tCtx.fillStyle = '#4a342e'; tCtx.fillRect(77, 120, 6, 30);
-            tCtx.translate(80, 80); 
+            tCtx.clearRect(0,0,150,150);
+            tCtx.fillStyle = '#4a342e'; tCtx.fillRect(72, 110, 6, 30);
+            tCtx.translate(75, 75); 
             for(let i=0; i<75; i++){
                 const t = i * 0.23;
-                const x = 4.2 * 16 * Math.pow(Math.sin(t), 3);
-                const y = -4.2 * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+                const x = 3.8 * 16 * Math.pow(Math.sin(t), 3);
+                const y = -3.8 * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
                 tCtx.fillStyle = i%2===0 ? '#ff4d6d' : '#ffb3c1';
-                tCtx.beginPath(); tCtx.arc(x, y + Math.sin(Date.now()/300)*2, 3.5, 0, Math.PI*2); tCtx.fill();
+                tCtx.beginPath(); tCtx.arc(x, y + Math.sin(Date.now()/300)*2, 3, 0, Math.PI*2); tCtx.fill();
             }
             tCtx.setTransform(1,0,0,1,0,0);
             requestAnimationFrame(drawTree);
         }
         drawTree();
 
-        // --- LÓGICA JUEGO ---
-        const gCanvas = document.getElementById('gameCanvas');
-        const gCtx = gCanvas.getContext('2d');
-        let playerX = 150, score = 0, gameActive = false, items = [];
+        let taps = 0, tapTimeout;
+        window.adminTouch = () => { taps++; clearTimeout(tapTimeout); if(taps >= 5) { document.getElementById('admin-panel').style.display = 'flex'; taps = 0; } else { tapTimeout = setTimeout(() => { taps = 0; }, 2000); } };
+        window.adminResetScores = async () => { if(confirm("¿WIPE FIREBASE?")) { await setDoc(doc(db, "competencia", "puntos"), { negrito: 0, negrita: 0 }); } };
+        window.adminResetCoupons = () => { if(confirm("¿WIPE LOCAL?")) { Object.keys(PREMIOS).forEach(k => localStorage.removeItem('coupon_'+k)); } };
 
-        window.startGameNow = (player) => {
-            currentPlayer = player;
-            closeModal('game-tutorial');
-            document.getElementById('game-view').style.display = 'block';
-            gCanvas.width = window.innerWidth; gCanvas.height = window.innerHeight;
-            playerX = gCanvas.width / 2;
-            gameActive = true; 
-            updateVsMsg();
-            gameLoop();
+        // --- SISTEMA DE JUEGO PRINCIPAL ---
+        const gCanvas = document.getElementById('gameCanvas'), gCtx = gCanvas.getContext('2d');
+        let playerX = 0, score = 0, gameActive = false, items = [], boss = null;
+        let lives = 3, isInvincible = false, power = 0;
+
+        window.prepareMission = (player) => {
+            currentPlayer = player; isAdminTest = false;
+            miPersonaje = player === 'negrita' ? "👸🏾" : "🧔"; miObjetivo = player === 'negrita' ? "🧔" : "👸🏾";
+            document.getElementById('mission-emoji').innerText = miObjetivo;
+            document.getElementById('mission-text').innerText = `Atrapa a ${player==='negrita'?'Negrito':'Negrita'}. Cuidado con los impostores y recuerda usar la Bomba.`;
+            closeModal('game-tutorial'); document.getElementById('mission-modal').style.display = 'flex';
         };
 
-        gCanvas.addEventListener('touchmove', (e) => { if(gameActive) playerX = e.touches[0].clientX; });
+        window.startMission = () => { closeModal('mission-modal'); playMusic('juego'); initGameData(); };
+        window.restartGame = () => { closeModal('game-over-modal'); initGameData(); };
+
+        function initGameData() {
+            document.getElementById('game-view').style.display = 'block';
+            setTimeout(() => {
+                gCanvas.width = window.innerWidth; gCanvas.height = window.innerHeight;
+                playerX = gCanvas.width / 2; gameActive = true; score = 0; items = []; boss = null;
+                lives = 3; power = 0; updateUI(); updateVsMsg(); gameLoop();
+            }, 50);
+        }
+
+        window.adminTestBoss = () => {
+            const pts = parseInt(document.getElementById('admin-boss-select').value); closeModal('admin-panel'); isAdminTest = true; currentPlayer = 'negrito'; miPersonaje = "🧔"; miObjetivo = "👸🏾";
+            document.getElementById('main-view').style.display = 'none'; document.getElementById('ticket-ui').style.display = 'none'; playMusic('juego');
+            setTimeout(() => {
+                gCanvas.width = window.innerWidth; gCanvas.height = window.innerHeight; playerX = gCanvas.width / 2;
+                score = pts - 1; items = []; boss = null; lives = 3; power = 100; gameActive = true;
+                updateUI(); document.getElementById('game-view').style.display = 'block'; gameLoop();
+            }, 50);
+        };
+
+        window.continueGame = () => { document.getElementById('reward-modal').style.display = 'none'; gameActive = true; items = []; boss = null; score++; document.getElementById('score').innerText = score; gameLoop(); };
+        window.saveWish = () => { const input = document.getElementById('wish-input').value; if(input.trim()) { localStorage.setItem('deseo_1000', input); location.reload(); } }
+
+        gCanvas.addEventListener('touchmove', (e) => { if(gameActive) playerX = e.touches[0].clientX; e.preventDefault(); }, {passive: false});
+        gCanvas.addEventListener('touchstart', (e) => { if(gameActive) playerX = e.touches[0].clientX; }, {passive: true});
+
+        function updateUI() {
+            let hearts = ""; for(let i=0; i<3; i++) hearts += i < lives ? "❤️" : "🖤";
+            document.getElementById('lives-display').innerText = hearts;
+            
+            document.getElementById('power-bar').style.width = Math.min(power, 100) + "%";
+            if(power >= 100) { document.getElementById('super-btn').style.display = 'block'; document.getElementById('power-bar').style.background = "#fff"; } 
+            else { document.getElementById('super-btn').style.display = 'none'; document.getElementById('power-bar').style.background = "var(--pink)"; }
+        }
+
+        window.activateSuperPower = () => {
+            if(power >= 100 && gameActive) {
+                power = 0; updateUI(); playSFX('explosion');
+                createExplosion(gCanvas.width/2, gCanvas.height/2, "💥", true); 
+                for(let i=items.length-1; i>=0; i--) {
+                    if(!items[i].isMe && !items[i].isBonus) { createExplosion(items[i].x, items[i].y, "✨"); items.splice(i, 1); }
+                }
+            }
+        }
+
+        function createExplosion(x, y, type="💥", giant=false) {
+            let particles = type === "✨" ? ["✨", "🌟", "💖"] : ["💥", "🔥", "💨"];
+            gCtx.font = giant ? "150px serif" : "40px serif"; gCtx.fillText(particles[Math.floor(Math.random()*particles.length)], x, giant ? y : y - 20);
+        }
+
+        function triggerDamage() {
+            if(isInvincible) return;
+            playSFX('hit'); lives--; updateUI();
+            if(lives <= 0) { gameActive = false; document.getElementById('game-over-modal').style.display = 'flex'; } 
+            else { isInvincible = true; setTimeout(() => { isInvincible = false; }, 2000); }
+        }
+
+        function spawnBoss(level) {
+            document.getElementById('scoreboard-normal').style.display = 'none';
+            document.getElementById('boss-warning').style.display = 'block';
+            setTimeout(() => document.getElementById('boss-warning').style.display = 'none', 2000);
+            
+            let maxHp = 5 + Math.floor(level/100); 
+            let bEmoji = level === 100 ? "👽" : "🤖";
+            
+            boss = { x: gCanvas.width/2, y: 120, vx: 2, vy: 0, hp: maxHp, maxHp: maxHp, emoji: bEmoji, level: level, timer: 0, state: 'tracking' };
+        }
 
         function gameLoop() {
             if(!gameActive) return;
-            gCtx.fillStyle = '#050510'; gCtx.fillRect(0,0,gCanvas.width, gCanvas.height);
-            gCtx.font = "55px serif"; gCtx.textAlign = "center";
+            gCtx.fillStyle = '#050510'; gCtx.fillRect(0,0,gCanvas.width, gCanvas.height); gCtx.textAlign = "center"; gCtx.textBaseline = "middle";
             
-            // Ella siempre es el jugador
-            gCtx.fillText("👸🏾", playerX, gCanvas.height - 80);
+            if(power < 100 && !boss) { power += 0.05; updateUI(); } 
 
-            if(Math.random() < 0.03) {
-                const isMe = Math.random() < 0.3;
-                items.push({
-                    x: 40 + Math.random()*(gCanvas.width-80),
-                    y: -50,
-                    s: 4 + Math.random()*3,
-                    sticker: isMe ? "🙋‍♂️" : ["👨🏻", "🧔", "👴"][Math.floor(Math.random()*3)],
-                    isMe: isMe
-                });
+            if(isInvincible) gCtx.globalAlpha = Math.sin(Date.now() / 100) > 0 ? 1 : 0.3;
+            gCtx.font = "55px serif"; gCtx.fillText(miPersonaje, playerX, gCanvas.height - 80); gCtx.globalAlpha = 1;
+
+            let nextMilestone = score + 1;
+            let isBossBeaten = (currentPlayer === 'negrita' && !isAdminTest) ? localStorage.getItem('coupon_' + nextMilestone) : false;
+
+            if (nextMilestone % 100 === 0 && !isBossBeaten && !boss) spawnBoss(nextMilestone);
+
+            if (boss) {
+                boss.timer++;
+
+                if (boss.level === 100) {
+                    if (boss.state === 'tracking') {
+                        boss.x += (playerX - boss.x) * 0.03;
+                        if (boss.timer % 120 === 0) { boss.state = 'warning'; boss.warningTimer = 30; } 
+                        if (boss.timer % 50 === 0) items.push({ x: boss.x, y: boss.y + 30, s: 6, sticker: "💣", type: "enemy", size: 50 });
+                        if (boss.timer % 180 === 0) items.push({ x: boss.x, y: boss.y + 30, s: 5, sticker: miObjetivo, isMe: true, size: 55 });
+                    } else if (boss.state === 'warning') {
+                        boss.warningTimer--;
+                        if(boss.warningTimer <= 0) { boss.state = 'charging'; boss.vy = 12; playSFX('hit'); }
+                    } else if (boss.state === 'charging') {
+                        boss.y += boss.vy;
+                        if(boss.y > gCanvas.height) { boss.y = -50; boss.state = 'recovering'; boss.vy = 4; boss.x = playerX; }
+                    } else if (boss.state === 'recovering') {
+                        boss.y += boss.vy; if(boss.y >= 120) { boss.y = 120; boss.state = 'tracking'; }
+                    }
+                }
+                else if (boss.level >= 200) {
+                    boss.x += (playerX - boss.x) * 0.015;
+                    if (boss.timer % 60 === 0) {
+                        let dx = playerX - boss.x; let dy = (gCanvas.height - 80) - boss.y; let dist = Math.sqrt(dx*dx + dy*dy);
+                        items.push({ x: boss.x, y: boss.y, s: 8, dx: (dx/dist)*8, dy: (dy/dist)*8, sticker: "⚡", type: "directed", size: 45 });
+                        playSFX('hit');
+                    }
+                    if (boss.timer % 200 === 0) items.push({ x: boss.x, y: boss.y, s: 5, sticker: miObjetivo, isMe: true, size: 55 });
+                }
+
+                if(boss.state === 'warning') gCtx.fillStyle = boss.timer % 5 === 0 ? "red" : "white";
+                gCtx.font = "80px serif"; gCtx.fillText(boss.emoji, boss.x, boss.y); gCtx.fillStyle = "white";
+                
+                let barW = 100;
+                gCtx.fillStyle = "red"; gCtx.fillRect(boss.x - barW/2, boss.y - 65, barW, 8);
+                gCtx.fillStyle = "#00ff00"; gCtx.fillRect(boss.x - barW/2, boss.y - 65, barW * (boss.hp / boss.maxHp), 8);
+
+                if (boss.state === 'charging' && !isInvincible) {
+                    if(Math.sqrt(Math.pow(boss.x - playerX, 2) + Math.pow(boss.y - (gCanvas.height - 80), 2)) < 60) triggerDamage();
+                }
+
+            } else {
+                let speedBase = 3.5 + (score/40); 
+                let spawnRate = Math.min(0.06, 0.02 + (score/1500)); 
+
+                if(Math.random() < spawnRate) {
+                    const r = Math.random();
+                    let t = "enemy", e = "🤡", isMe = false, isBonus = false, dx = 0;
+                    
+                    if(r < 0.02) { t = "1up"; e = "💖"; isBonus = true; } 
+                    else if(r < 0.05) { t = "gold"; e = "💛"; isBonus = true; dx = Math.random() > 0.5 ? 2 : -2; } 
+                    else if(r < 0.08) { t = "ghost"; e = "👻"; } 
+                    else if(r < 0.35) { t = "me"; e = miObjetivo; isMe = true; } 
+                    else { const imp = currentPlayer === 'negrita' ? ["🤡", "👽", "👨🏻"] : ["🤡", "👽", "👵🏽"]; e = imp[Math.floor(Math.random()*3)]; }
+
+                    items.push({ x: 40 + Math.random()*(gCanvas.width-80), y: -50, s: speedBase + Math.random()*1.5, sticker: e, type: t, isMe: isMe, isBonus: isBonus, size: 55, dx: dx });
+                }
             }
 
             for(let i=items.length-1; i>=0; i--) {
-                let it = items[i]; it.y += it.s;
-                gCtx.fillText(it.sticker, it.x, it.y);
-                if(it.y > gCanvas.height - 130 && Math.abs(it.x - playerX) < 50) {
-                    if(it.isMe) {
-                        score++; 
-                        document.getElementById('score').innerText = score;
-                        saveScore(score);
-                        items.splice(i, 1);
-                    } else {
-                        gameActive = false;
-                        document.getElementById('warning-card').style.display = 'block';
-                        setTimeout(() => { 
-                            document.getElementById('warning-card').style.display = 'none'; 
-                            score = 0;
-                            document.getElementById('score').innerText = 0;
-                            gameActive = true; items = []; gameLoop();
-                        }, 1500);
-                        return;
-                    }
+                let it = items[i]; 
+                
+                if(it.type === "directed") { it.x += it.dx; it.y += it.dy; }
+                else if(it.type === "gold") { it.x += it.dx; it.y += it.s; if(it.x<20||it.x>gCanvas.width-20) it.dx*=-1; }
+                else if(it.type === "ghost") { it.y += it.s * 0.7; it.x += (playerX - it.x) * 0.015; }
+                else { it.y += it.s; }
+                
+                gCtx.font = (it.size || 55) + "px serif"; gCtx.fillText(it.sticker, it.x, it.y);
+
+                let hitboxR = (it.size || 55) * 0.45; let dx = it.x - playerX; let dy = it.y - (gCanvas.height - 80);
+
+                if(Math.sqrt(dx*dx + dy*dy) < hitboxR + 25) { 
+                    if(it.type === "1up") { lives = Math.min(lives + 1, 3); updateUI(); playSFX('1up'); createExplosion(it.x, it.y, "✨"); items.splice(i, 1); }
+                    else if(it.type === "gold") { score+=3; power+=15; updateUI(); playSFX('coin'); createExplosion(it.x, it.y, "✨"); items.splice(i, 1); }
+                    else if(it.isMe) {
+                        items.splice(i, 1); createExplosion(it.x, it.y, "✨"); playSFX('coin');
+
+                        if (boss) {
+                            boss.hp--;
+                            if (boss.hp <= 0) {
+                                playSFX('explosion'); createExplosion(boss.x, boss.y, "💥💥💥", true); gameActive = false; document.getElementById('scoreboard-normal').style.display = 'block';
+                                if (isAdminTest || currentPlayer === 'negrito') { setTimeout(() => { alert("¡JEFE DESTRUIDO!"); score++; document.getElementById('score').innerText = score; boss = null; items = []; gameActive = true; gameLoop(); }, 800); return; }
+                                let cupScore = score + 1; localStorage.setItem('coupon_'+cupScore, 'true');
+                                setTimeout(() => {
+                                    if(cupScore === 1000) { document.getElementById('wish-modal').style.display = 'flex'; } 
+                                    else { document.getElementById('reward-icon').innerText = PREMIOS[cupScore].i; document.getElementById('reward-title').innerText = PREMIOS[cupScore].t; document.getElementById('reward-verse').innerText = PREMIOS[cupScore].v; document.getElementById('reward-modal').style.display = 'flex'; }
+                                }, 1000); return;
+                            }
+                        } else { score++; document.getElementById('score').innerText = score; saveScore(score); power += 3; updateUI(); }
+                    } else { items.splice(i, 1); triggerDamage(); if(!gameActive) return; }
                 }
-                if(it.y > gCanvas.height) items.splice(i, 1);
+                if(it.y > gCanvas.height + (it.size || 55) || it.x < -50 || it.x > gCanvas.width+50) items.splice(i, 1);
             }
             requestAnimationFrame(gameLoop);
         }
     </script>
 </body>
 </html>
-
-
