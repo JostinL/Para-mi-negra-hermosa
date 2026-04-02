@@ -27,7 +27,20 @@
 
         .retro-font { font-family: 'Press Start 2P', monospace !important; }
 
-        /* --- TICKET ROMÁNTICO FLOTANTE (DISEÑO ORIGINAL) --- */
+        /* --- INNOVACIÓN 1: TRANSICIONES CINEMÁTICAS Y TILT 3D --- */
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .pop-in { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+        .card { 
+            background: var(--card); width: 90%; max-width: 360px; border-radius: 40px; padding: 25px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6); text-align: center;
+            transition: transform 0.1s ease-out; transform-style: preserve-3d;
+        }
+        .card-inner-glow { filter: drop-shadow(0 0 10px rgba(255, 77, 109, 0.2)); }
+
         .floating-container {
             position: fixed; top: 20px; right: 20px; z-index: 1000;
             display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
@@ -36,66 +49,69 @@
             width: 95px; height: 55px; background: #fff9fa; cursor: pointer;
             border: 2px solid var(--pink); border-radius: 8px;
             display: flex; box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
-            animation: float 3s ease-in-out infinite;
+            animation: float 3s ease-in-out infinite; transition: transform 0.2s;
         }
-        .ticket-left {
-            flex: 2; display: flex; flex-direction: column; justify-content: center;
-            align-items: center; font-weight: 900; font-size: 0.65rem; color: var(--brown); border-right: 2px dashed var(--pink);
-        }
-        .ticket-right {
-            flex: 1; background: var(--pink); display: flex; justify-content: center;
-            align-items: center; font-size: 1.2rem; color: white; border-radius: 0 6px 6px 0;
-        }
+        .ticket-visual:active { transform: scale(0.9); }
+        .ticket-left { flex: 2; display: flex; flex-direction: column; justify-content: center; align-items: center; font-weight: 900; font-size: 0.65rem; color: var(--brown); border-right: 2px dashed var(--pink); }
+        .ticket-right { flex: 1; background: var(--pink); display: flex; justify-content: center; align-items: center; font-size: 1.2rem; color: white; border-radius: 0 6px 6px 0; }
         @keyframes float { 0%, 100% { transform: translateY(0) rotate(2deg); } 50% { transform: translateY(-6px) rotate(-2deg); } }
 
-        /* --- BÓVEDA DE CUPONES --- */
-        #vault-view { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 1500; padding: 20px; overflow-y: auto; color: white; }
-        .coupon-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; padding-bottom: 20px;}
-        .coupon-item { background: white; border-radius: 15px; display: flex; padding: 15px; color: var(--brown); opacity: 0.5; filter: grayscale(1); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .coupon-item.unlocked { opacity: 1; filter: grayscale(0); border: 2px solid var(--gold); }
-        .coupon-icon { font-size: 2.2rem; margin-right: 15px; display: flex; align-items: center; width: 45px; justify-content: center;}
-        .coupon-details h3 { color: var(--pink); font-size: 1.1rem; margin-bottom: 5px; }
-        .coupon-details p { font-size: 0.8rem; font-style: italic; color: #666; }
+        /* --- MODALES --- */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; text-align: center; padding: 20px; opacity: 0; transition: opacity 0.3s; }
+        .modal.active { display: flex; opacity: 1; }
+        .modal-content { background: var(--card); padding: 25px; border-radius: 30px; border: 3px solid var(--pink); max-width: 340px; width: 100%; box-shadow: 0 10px 30px rgba(255, 77, 109, 0.3); transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .modal.active .modal-content { transform: scale(1); }
 
-        /* --- MODALES ROMÁNTICOS --- */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; text-align: center; padding: 20px; }
-        .modal-content { background: var(--card); padding: 25px; border-radius: 30px; border: 3px solid var(--pink); max-width: 340px; width: 100%; box-shadow: 0 10px 30px rgba(255, 77, 109, 0.3); }
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+        #treeCanvas { width: 150px; height: 150px; cursor: pointer; } 
+        .timer-box { background: rgba(255, 77, 109, 0.08); padding: 15px; border-radius: 20px; margin: 15px 0; }
+        .timer-box strong { display: block; font-size: 1.15rem; color: var(--pink); margin-top: 5px; }
+        .btn-group { display: flex; gap: 10px; justify-content: center; }
+        
+        /* INNOVACIÓN 1: NEON GLOW */
+        .btn { padding: 12px 25px; border-radius: 50px; border: none; font-weight: 600; color: white; cursor: pointer; transition: 0.2s;}
+        .btn:active { transform: scale(0.95); }
+        .btn-pink { background: var(--pink); box-shadow: 0 0 10px rgba(255, 77, 109, 0.5); }
+        .btn-pink:hover { box-shadow: 0 0 20px rgba(255, 77, 109, 0.8); }
+        .btn-dark { background: #2b2b4d; }
 
         .btn-arcade-soft { background: transparent; border: 2px solid var(--pink); color: var(--pink); font-family: 'Press Start 2P', monospace; font-size: 0.65rem; padding: 15px; width: 100%; cursor: pointer; margin-top: 10px; transition: 0.2s; border-radius: 15px; }
         .btn-arcade-soft:active { background: var(--pink); color: white; }
         .btn-queen { background: var(--pink); border: 2px solid var(--gold); color: white; font-size: 0.75rem; padding: 20px; box-shadow: 0 0 15px rgba(255, 77, 109, 0.5); animation: pulse-queen 2s infinite; }
         @keyframes pulse-queen { 0% { box-shadow: 0 0 10px var(--pink); } 50% { box-shadow: 0 0 20px var(--gold); } 100% { box-shadow: 0 0 10px var(--pink); } }
 
-        /* --- TARJETA PRINCIPAL (DISEÑO ORIGINAL INTACTO) --- */
-        .card { background: var(--card); width: 90%; max-width: 360px; border-radius: 40px; padding: 25px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); text-align: center; }
-        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
-        #treeCanvas { width: 150px; height: 150px; cursor: pointer; } 
-        .timer-box { background: rgba(255, 77, 109, 0.08); padding: 15px; border-radius: 20px; margin: 15px 0; }
-        .timer-box strong { display: block; font-size: 1.15rem; color: var(--pink); margin-top: 5px; }
-        .btn-group { display: flex; gap: 10px; justify-content: center; }
-        .btn { padding: 12px 25px; border-radius: 50px; border: none; font-weight: 600; color: white; cursor: pointer; transition: 0.2s;}
-        .btn:active { transform: scale(0.95); }
-        .btn-pink { background: var(--pink); }
-        .btn-dark { background: #2b2b4d; }
+        /* --- BÓVEDA --- */
+        #vault-view { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 1500; padding: 20px; overflow-y: auto; color: white; opacity: 0; transition: opacity 0.3s;}
+        #vault-view.active { display: block; opacity: 1; }
+        .coupon-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; padding-bottom: 20px;}
+        .coupon-item { background: white; border-radius: 15px; display: flex; padding: 15px; color: var(--brown); opacity: 0.5; filter: grayscale(1); box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: transform 0.2s;}
+        .coupon-item.unlocked { opacity: 1; filter: grayscale(0); border: 2px solid var(--gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);}
+        .coupon-item:active { transform: scale(0.98); }
+        .coupon-icon { font-size: 2.2rem; margin-right: 15px; display: flex; align-items: center; width: 45px; justify-content: center; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));}
+        .coupon-details h3 { color: var(--pink); font-size: 1.1rem; margin-bottom: 5px; }
+        .coupon-details p { font-size: 0.8rem; font-style: italic; color: #666; }
 
         /* --- VISTA LECTURA --- */
-        #read-view { display: none; position: fixed; inset: 0; background: #0d0d1a; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 500; }
+        #read-view { display: none; position: fixed; inset: 0; background: #0d0d1a; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 500; opacity: 0; transition: opacity 0.5s; }
+        #read-view.active { display: flex; opacity: 1;}
         .poem-container { max-width: 340px; text-align: center; margin-bottom: 20px; }
-        .poem-text { color: #f5e8dc; font-size: 1rem; line-height: 1.5; font-style: italic; }
+        .poem-text { color: #f5e8dc; font-size: 1rem; line-height: 1.5; font-style: italic; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
         .ring-section { display: flex; flex-direction: column; align-items: center; margin-top: 10px; }
         .ring-container { width: 100px; height: 80px; perspective: 500px; display: flex; justify-content: center; align-items: center; }
-        .ring-3d { width: 70px; height: 35px; border: 5px solid #e0e0e0; border-radius: 50%; position: relative; transform-style: preserve-3d; animation: rotateRing 4s linear infinite; }
-        .diamond { width: 15px; height: 15px; background: #b9f2ff; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); position: absolute; top: -10px; left: 50%; transform: translateX(-50%); box-shadow: 0 0 10px white; }
+        .ring-3d { width: 70px; height: 35px; border: 5px solid #e0e0e0; border-radius: 50%; position: relative; transform-style: preserve-3d; animation: rotateRing 4s linear infinite; box-shadow: inset 0 0 10px #000; }
+        .diamond { width: 15px; height: 15px; background: #b9f2ff; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); position: absolute; top: -10px; left: 50%; transform: translateX(-50%); box-shadow: 0 0 15px #b9f2ff; }
 
         /* --- JUEGO ONLINE --- */
         #game-view { display: none; position: fixed; inset: 0; background: #000; z-index: 600; }
         #gameCanvas { width: 100%; height: 100%; display: block; }
+        .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-2px, 0, 0); } 20%, 80% { transform: translate3d(3px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
         
-        .game-ui { position: absolute; top: 15px; width: 100%; display: flex; justify-content: space-between; padding: 0 15px; z-index: 10; font-size: 0.6rem; color: var(--arcade-green); align-items: flex-start;}
+        .game-ui { position: absolute; top: 15px; width: 100%; display: flex; justify-content: space-between; padding: 0 15px; z-index: 10; font-size: 0.6rem; color: var(--arcade-green); align-items: flex-start; text-shadow: 0 0 5px var(--arcade-green);}
         .ui-left { display: flex; flex-direction: column; gap: 5px; }
         .ui-right { text-align: right; }
         #lives-display { font-size: 1.2rem; letter-spacing: 2px; }
-        .power-container { width: 100px; height: 12px; border: 2px solid white; margin-top: 5px; border-radius: 5px; overflow: hidden;}
+        .power-container { width: 100px; height: 12px; border: 2px solid white; margin-top: 5px; border-radius: 5px; overflow: hidden; box-shadow: 0 0 5px white;}
         .power-fill { width: 0%; height: 100%; background: var(--pink); transition: 0.1s; }
         
         #super-btn { 
@@ -108,20 +124,29 @@
 
         .scoreboard-online { position: absolute; top: 60px; width: 100%; text-align: center; color: white; font-size: 0.55rem; background: rgba(0,0,0,0.8); border-bottom: 2px solid var(--arcade-green); padding: 8px 0; z-index: 5;}
         #boss-warning { display: none; position: absolute; top: 40%; left: 50%; width: 100%; transform: translate(-50%, -50%); text-align: center; color: red; font-size: 1.3rem; animation: pulse 0.5s infinite; z-index: 800; text-shadow: 2px 2px 0 #fff; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
+        /* --- INNOVACIÓN 4: PANEL ADMIN LOGIN Y RBAC --- */
         #admin-panel { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 5000; justify-content: center; align-items: center; padding: 20px; }
-        .admin-box { background: #0d1117; border: 2px solid #00ff00; color: #00ff00; font-family: monospace; padding: 20px; width: 100%; max-width: 340px; text-align: left; }
-        .admin-select { width: 100%; padding: 10px; background: #161b22; color: #00ff00; border: 1px solid #00ff00; margin-top: 10px; }
+        .admin-box { background: #0d1117; border: 2px solid #00ff00; color: #00ff00; font-family: monospace; padding: 20px; width: 100%; max-width: 340px; text-align: left; max-height: 90vh; overflow-y: auto; box-shadow: 0 0 20px rgba(0,255,0,0.2); }
+        .admin-input { width: 100%; padding: 10px; background: #000; color: #00ff00; border: 1px solid #00ff00; margin-top: 10px; font-family: monospace; outline: none; }
+        .admin-input:focus { box-shadow: 0 0 10px #00ff00; }
+        .admin-select { width: 100%; padding: 10px; background: #161b22; color: #00ff00; border: 1px solid #00ff00; margin-top: 10px; font-family: monospace; }
+        .admin-live-box { font-size:0.8rem; margin-bottom:15px; color:#00ff00; background:#002200; padding:10px; border:1px solid #00ff00; }
+        .slider-container { margin-top: 15px; border-bottom: 1px dashed #333; padding-bottom: 10px;}
+        .slider-container label { font-size: 0.7rem; color: #aaa; display: block; margin-bottom: 5px; }
+        input[type=range] { width: 100%; accent-color: #00ff00; }
+
+        /* Vistas internas del panel admin */
+        #admin-login-view { display: block; }
+        #admin-dev-view { display: none; }
+        #admin-vip-view { display: none; }
     </style>
 </head>
 <body>
 
-    <!-- REPRODUCTORES DE MÚSICA -->
     <audio id="audio-poema" loop src="https://cdn.pixabay.com/download/audio/2023/12/12/audio_731388ae30.mp3?filename=p-r-i-d-e-o-f-u-s-179831.mp3"></audio>
     <audio id="audio-game" loop src="https://cdn.pixabay.com/download/audio/2022/01/21/audio_51d54b4f53.mp3?filename=8-bit-arcade-game-138827.mp3"></audio>
 
-    <!-- TICKET FLOTANTE (RESTAURADO) -->
     <div class="floating-container" id="ticket-ui">
         <div class="ticket-visual" onclick="openVault()">
             <div class="ticket-left">TICKET DE<br><span style="font-size:1.1rem; color:var(--pink)">Amor</span></div>
@@ -129,15 +154,13 @@
         </div>
     </div>
 
-    <!-- PANTALLA PRINCIPAL -->
     <div id="main-view">
-        <div class="card">
+        <div class="card card-inner-glow" id="main-card">
             <div class="card-header">
                 <div style="text-align: left; width: 55%;">
                     <h2 style="font-size: 1.1rem; color: var(--pink);">Hola, Mi Hermosa</h2>
                     <p style="font-size: 0.85rem; margin-top: 3px;">Un detalle para la dueña de mi corazón.</p>
                 </div>
-                <!-- CANVAS RESTAURADO A TAMAÑO ORIGINAL -->
                 <canvas id="treeCanvas" width="150" height="150" onclick="adminTouch()"></canvas>
             </div>
             <div class="timer-box">
@@ -145,16 +168,15 @@
                 <strong id="time-display">Cargando...</strong>
             </div>
             <div class="btn-group">
-                <button class="btn btn-pink retro-font" style="font-size: 0.6rem; padding: 15px 20px;" onclick="showTutorial()">JUGAR</button>
+                <button class="btn btn-pink retro-font" style="font-size: 0.6rem; padding: 15px 20px;" onclick="openModalWithAnim('game-tutorial')">JUGAR</button>
                 <button class="btn btn-dark" onclick="startRead()">Leer</button>
             </div>
         </div>
     </div>
 
-    <!-- MENÚ SELECCIÓN JUGADOR -->
     <div id="game-tutorial" class="modal">
         <div class="modal-content">
-            <h2 style="color: var(--pink); font-family: 'Dancing Script'; font-size: 2.5rem; margin-bottom: 5px;">Misión Rescate</h2>
+            <h2 style="color: var(--pink); font-family: 'Dancing Script'; font-size: 2.5rem; margin-bottom: 5px; text-shadow: 0 0 10px rgba(255,77,109,0.5);">Misión Rescate</h2>
             <p style="font-size:0.8rem; margin-bottom:15px; color:#666;">Selecciona a tu protagonista.</p>
             
             <div style="display:flex; flex-direction:column; gap:10px;">
@@ -162,15 +184,13 @@
                 <button class="btn-arcade-soft" style="color:var(--brown); border-color:var(--brown);" onclick="prepareMission('negrito')">SOY NEGRITO 🧔</button>
                 
                 <div style="display:flex; gap:10px; margin-top:10px;">
-                    <button class="btn-arcade-soft" style="flex:1; border-style:dashed; padding:10px; font-size:0.55rem;" onclick="openRules()">📜 REGLAS</button>
-                    <!-- FIX: Volver suavemente al menú -->
-                    <button class="btn-arcade-soft" style="flex:1; background:#eee; color:#333; border:none; padding:10px; font-size:0.55rem;" onclick="closeGameToMenu('game-tutorial')">⬅ VOLVER</button>
+                    <button class="btn-arcade-soft" style="flex:1; border-style:dashed; padding:10px; font-size:0.55rem;" onclick="openModalWithAnim('rules-modal')">📜 REGLAS</button>
+                    <button class="btn-arcade-soft" style="flex:1; background:#eee; color:#333; border:none; padding:10px; font-size:0.55rem;" onclick="closeModalWithAnim('game-tutorial')">⬅ VOLVER</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- REGLAS -->
     <div id="rules-modal" class="modal">
         <div class="modal-content" style="text-align: left;">
             <h2 style="color:var(--gold); font-family:'Dancing Script'; text-align:center; font-size:2rem; margin-bottom: 15px;">Cómo Jugar</h2>
@@ -179,21 +199,19 @@
                 <li style="margin-bottom:8px;">❤️ <b>Vidas:</b> Tienes 3 vidas. Busca corazones (💖) para curarte.</li>
                 <li style="margin-bottom:8px;">⚡ <b>Bonus:</b> El corazón dorado (💛) te da 3 pts y mucha energía. ¡Ojo con el fantasma (👻) que te persigue!</li>
                 <li style="margin-bottom:8px;">💥 <b>Bomba:</b> La barra carga sola. Cuando salga el botón abajo, tócalo para explotar todo.</li>
-                <li>👹 <b>Jefes:</b> Salen cada 100 pts. Son listos, te persiguen. Atrapa lo que sueltan para ganar.</li>
+                <li>👹 <b>Jefes:</b> Salen cada 100 pts. ¡Cada nivel tiene un patrón de ataque único!</li>
             </ul>
-            <button class="btn btn-pink" style="width:100%; margin-top:10px;" onclick="closeModal('rules-modal')">¡Entendido!</button>
+            <button class="btn btn-pink" style="width:100%; margin-top:10px;" onclick="closeModalWithAnim('rules-modal')">¡Entendido!</button>
         </div>
     </div>
 
-    <!-- MODAL GAME OVER -->
     <div id="game-over-modal" class="modal">
         <div class="modal-content">
-            <h2 style="color:red; font-family:'Press Start 2P'; font-size:1.2rem; margin-bottom:15px;">GAME OVER</h2>
+            <h2 style="color:red; font-family:'Press Start 2P'; font-size:1.2rem; margin-bottom:15px; text-shadow: 0 0 10px red;">GAME OVER</h2>
             <div style="font-size:3rem; margin-bottom:10px;">💀</div>
             <p style="font-size:0.85rem; color:var(--brown); margin-bottom:20px;">Te has quedado sin vidas, amor.</p>
             <div style="display:flex; flex-direction:column; gap:10px;">
                 <button class="btn btn-pink retro-font" style="font-size:0.6rem; padding:15px;" onclick="restartGame()">REINTENTAR</button>
-                <!-- FIX: Volver suavemente al menú principal -->
                 <button class="btn btn-dark retro-font" style="font-size:0.6rem; padding:15px;" onclick="closeGameToMenu('game-over-modal')">MENÚ PRINCIPAL</button>
             </div>
         </div>
@@ -201,47 +219,47 @@
 
     <div id="mission-modal" class="modal">
         <div class="modal-content">
-            <h2 style="color:var(--pink); font-family:'Dancing Script'; font-size:2.2rem;">Prepárate</h2>
-            <div id="mission-emoji" style="font-size:4rem; margin:15px 0; font-family: serif;"></div>
+            <h2 style="color:var(--pink); font-family:'Dancing Script'; font-size:2.2rem; text-shadow: 0 0 10px rgba(255,77,109,0.3);">Prepárate</h2>
+            <div id="mission-emoji" style="font-size:4rem; margin:15px 0; font-family: serif; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));"></div>
             <p id="mission-text" style="color:var(--brown); font-size:0.85rem; line-height:1.5; margin-bottom:20px;"></p>
             <button class="btn btn-pink retro-font" style="width:100%; font-size:0.6rem; padding:15px;" onclick="startMission()">INICIAR</button>
         </div>
     </div>
 
-    <!-- JUEGO ONLINE -->
     <div id="game-view">
-        <div class="game-ui retro-font">
-            <div class="ui-left">
-                <div id="lives-display">❤️❤️❤️</div>
-                <div class="power-container"><div id="power-bar" class="power-fill"></div></div>
+        <div id="game-container" style="width: 100%; height: 100%;">
+            <div class="game-ui retro-font">
+                <div class="ui-left">
+                    <div id="lives-display">❤️❤️❤️</div>
+                    <div class="power-container"><div id="power-bar" class="power-fill"></div></div>
+                </div>
+                <div class="ui-right">
+                    <div>SCORE: <span id="score" style="text-shadow: 0 0 5px #fff;">0</span></div>
+                </div>
             </div>
-            <div class="ui-right">
-                <div>SCORE: <span id="score">0</span></div>
-            </div>
-        </div>
-        
-        <button id="super-btn" ontouchstart="activateSuperPower()" onclick="activateSuperPower()">¡SUPER BOMBA!</button>
+            
+            <button id="super-btn" ontouchstart="activateSuperPower()" onclick="activateSuperPower()">¡SUPER BOMBA!</button>
 
-        <div id="scoreboard-normal" class="scoreboard-online retro-font">
-            <div id="vs-msg" style="color:#ffeb3b; margin-bottom:6px">LOADING...</div>
-            🧔 <span id="rec-negrito">0</span> | 👸🏾 <span id="rec-negrita">0</span>
+            <div id="scoreboard-normal" class="scoreboard-online retro-font">
+                <div id="vs-msg" style="color:#ffeb3b; margin-bottom:6px">LOADING...</div>
+                🧔 <span id="rec-negrito">0</span> | 👸🏾 <span id="rec-negrita">0</span>
+            </div>
+            
+            <div id="boss-warning" class="retro-font">DANGER!<br>JEFE FINAL</div>
+            <canvas id="gameCanvas"></canvas>
         </div>
-        
-        <div id="boss-warning" class="retro-font">DANGER!<br>JEFE FINAL</div>
-        <canvas id="gameCanvas"></canvas>
     </div>
 
-    <!-- BÓVEDA -->
     <div id="vault-view">
-        <h2 style="font-family:'Dancing Script'; color:var(--pink); text-align:center; font-size:2.5rem;">Mis Cupones Reales</h2>
+        <h2 style="font-family:'Dancing Script'; color:var(--pink); text-align:center; font-size:2.5rem; text-shadow: 0 0 10px rgba(255,77,109,0.5);">Mis Cupones</h2>
         <div class="coupon-grid" id="coupon-container"></div>
         <button class="btn btn-pink retro-font" style="width:100%; margin-top:20px; font-size:0.6rem;" onclick="closeVault()">VOLVER</button>
     </div>
 
     <div id="reward-modal" class="modal">
         <div class="modal-content">
-            <h2 style="color:var(--gold); font-family:'Dancing Script'; font-size:2.2rem;">¡Jefe Derrotado!</h2>
-            <div id="reward-icon" style="font-size:4rem; margin:10px 0;">🎁</div>
+            <h2 style="color:var(--gold); font-family:'Dancing Script'; font-size:2.2rem; text-shadow: 0 0 15px rgba(212,175,55,0.5);">¡Jefe Derrotado!</h2>
+            <div id="reward-icon" style="font-size:4rem; margin:10px 0; animation: popIn 0.5s;">🎁</div>
             <p id="reward-title" style="font-weight:bold; margin-bottom:5px; color:var(--brown)"></p>
             <p id="reward-verse" style="font-size:0.8rem; font-style:italic; color:#666; border-top:1px solid #ddd; padding-top:10px;"></p>
             <button class="btn btn-pink retro-font" style="margin-top:15px; width:100%; font-size:0.6rem; padding: 15px;" onclick="continueGame()">CONTINUAR</button>
@@ -250,17 +268,16 @@
 
     <div id="wish-modal" class="modal">
         <div class="modal-content">
-            <h2 style="color:var(--gold); font-family:'Dancing Script'; font-size:2.5rem;">✨ El Deseo ✨</h2>
+            <h2 style="color:var(--gold); font-family:'Dancing Script'; font-size:2.5rem; text-shadow: 0 0 20px var(--gold);">✨ El Deseo ✨</h2>
             <p style="font-size:0.85rem; color:var(--brown);">Escribe tu deseo absoluto en este cupón:</p>
-            <textarea id="wish-input" style="width:100%; height:80px; margin:15px 0; border-radius:10px; padding:10px; border: 2px solid var(--pink); resize:none; font-family:inherit;"></textarea>
+            <textarea id="wish-input" style="width:100%; height:80px; margin:15px 0; border-radius:10px; padding:10px; border: 2px solid var(--pink); resize:none; font-family:inherit; outline:none;"></textarea>
             <button class="btn btn-pink retro-font" style="width:100%; font-size:0.6rem; padding:15px;" onclick="saveWish()">SELLAR DESEO</button>
         </div>
     </div>
 
-    <!-- LECTURA -->
     <div id="read-view">
         <div class="poem-container">
-            <p class="poem-text">
+            <p class="poem-text fade-in">
                 "No hay paisaje más bello que tu sonrisa,<br>
                 ni lugar más seguro que estar junto a ti.<br>
                 Eres la mujer más hermosa que mis ojos han visto,<br>
@@ -271,24 +288,72 @@
                 pronto te lo daré en la vida real. ❤️"
             </p>
         </div>
-        <div class="ring-section">
+        <div class="ring-section fade-in" style="animation-delay: 0.3s;">
             <div class="ring-container"><div class="ring-3d"><div class="diamond"></div></div></div>
-            <p style="color: var(--gold); font-family: 'Dancing Script'; font-size: 1.6rem; margin-top: 5px;">Anillo de Promesa</p>
+            <p style="color: var(--gold); font-family: 'Dancing Script'; font-size: 1.6rem; margin-top: 5px; text-shadow: 0 0 10px var(--gold);">Anillo de Promesa</p>
         </div>
-        <!-- FIX: Botón de Volver ahora sí funciona perfectamente -->
-        <button class="btn btn-dark" style="margin-top: 30px;" onclick="closeRead()">Volver al Menú</button>
+        <button class="btn btn-dark fade-in" style="margin-top: 30px; animation-delay: 0.6s;" onclick="closeRead()">Volver al Menú</button>
     </div>
 
-    <!-- ADMIN -->
     <div id="admin-panel">
         <div class="admin-box">
-            <h3 style="border-bottom: 1px dashed #00ff00; padding-bottom:10px; margin-bottom:15px; text-align:center;">HACKER CONSOLE</h3>
-            <div id="admin-status" style="font-size:0.75rem; margin-bottom:15px; color:#aaa; line-height: 1.5;"></div>
-            <select id="admin-boss-select" class="admin-select"><option value="100">Boss 100</option><option value="200">Boss 200</option></select>
-            <button class="btn-arcade-soft" style="border-color:#00ff00; color:#00ff00; padding:10px" onclick="adminTestBoss()">EJECUTAR TEST</button>
-            <button class="btn-arcade-soft" style="color:#ff4d4d; border-color:#ff4d4d; margin-top: 20px; padding:10px;" onclick="adminResetScores()">RESET FIREBASE</button>
-            <button class="btn-arcade-soft" style="color:#ffa500; border-color:#ffa500; padding:10px;" onclick="adminResetCoupons()">RESET LOCAL DATA</button>
-            <button class="btn-arcade-soft" style="background:#444; color:#fff; border:none; margin-top:20px; padding:10px;" onclick="closeModal('admin-panel')">CERRAR</button>
+            <h3 style="border-bottom: 1px dashed #00ff00; padding-bottom:10px; margin-bottom:15px; text-align:center; text-shadow: 0 0 5px #00ff00;">SYSTEM TERMINAL</h3>
+            
+            <div id="admin-login-view">
+                <p style="font-size:0.75rem; color:#00ff00;">> ENTER CREDENTIALS</p>
+                <input type="text" id="admin-user" class="admin-input" placeholder="USER">
+                <input type="password" id="admin-pass" class="admin-input" placeholder="PASSWORD">
+                <button class="btn-arcade-soft" style="border-color:#00ff00; color:#00ff00; margin-top:20px;" onclick="attemptLogin()">ACCESS</button>
+                <button class="btn-arcade-soft" style="border-color:#ff4d4d; color:#ff4d4d; margin-top:10px;" onclick="closeModal('admin-panel')">ABORT</button>
+            </div>
+
+            <div id="admin-dev-view">
+                <p style="font-size:0.7rem; color:#00ffff; margin-bottom:10px;">> WELCOME GOD_MODE</p>
+                <div class="admin-live-box">
+                    <span>▶ DB SECURE</span><br>
+                    🧔 Negrito: <span id="admin-score-negrito">0</span> | 👸🏾 Negrita: <span id="admin-score-negrita">0</span>
+                </div>
+
+                <div class="slider-container">
+                    <label>GLOBAL SPEED MULTIPLIER: <span id="speed-val">1.0</span>x</label>
+                    <input type="range" id="hack-speed" min="0.5" max="3" step="0.1" value="1" oninput="document.getElementById('speed-val').innerText=this.value; engineConfig.speedMult=parseFloat(this.value);">
+                </div>
+                <div class="slider-container">
+                    <label>SPAWN RATE MULTIPLIER: <span id="spawn-val">1.0</span>x</label>
+                    <input type="range" id="hack-spawn" min="0.5" max="5" step="0.1" value="1" oninput="document.getElementById('spawn-val').innerText=this.value; engineConfig.spawnMult=parseFloat(this.value);">
+                </div>
+
+                <select id="admin-boss-select" class="admin-select" style="margin-top:20px;">
+                    <option value="100">Boss 100 (Ondulante)</option>
+                    <option value="200">Boss 200 (Teleport)</option>
+                    <option value="300">Boss 300 (Rebote)</option>
+                    <option value="400">Boss 400 (Francotirador)</option>
+                    <option value="500">Boss 500 (Ondulante Rápido)</option>
+                    <option value="600">Boss 600 (Caótico)</option>
+                    <option value="700">Boss 700 (Doble Rebote)</option>
+                    <option value="800">Boss 800 (Lluvia)</option>
+                    <option value="900">Boss 900 (Velocista)</option>
+                    <option value="1000">Boss 1000 (Dios)</option>
+                </select>
+                <button class="btn-arcade-soft" style="border-color:#00ff00; color:#00ff00;" onclick="adminTestBoss()">FORCE SPAWN</button>
+                
+                <button class="btn-arcade-soft" style="color:#00ffff; border-color:#00ffff; margin-top:15px;" onclick="toggleGodMode()">TOGGLE GOD MODE</button>
+                <button class="btn-arcade-soft" style="color:#ff00ff; border-color:#ff00ff;" onclick="maxPowerHacker()">MAX POWER BOMBA</button>
+
+                <button class="btn-arcade-soft" style="color:#ff4d4d; border-color:#ff4d4d; margin-top: 20px;" onclick="adminResetScores()">WIPE FIREBASE</button>
+                <button class="btn-arcade-soft" style="color:#ffa500; border-color:#ffa500;" onclick="adminResetCoupons()">WIPE LOCAL DATA</button>
+                <button class="btn-arcade-soft" style="background:#444; color:#fff; border:none; margin-top:10px;" onclick="closeAdmin()">EXIT</button>
+            </div>
+
+            <div id="admin-vip-view">
+                <p style="font-size:0.8rem; color:var(--pink); font-family:'Poppins'; margin-bottom:15px; text-align:center;">
+                    Hola Hermosa 👸🏾<br>Configura los premios secretos que me darás a mí.
+                </p>
+                <div id="vip-inputs-container"></div>
+                <button class="btn-arcade-soft" style="color:#ffff00; border-color:#ffff00; margin-top:20px; font-family:'Poppins';" onclick="saveVipConfig()">Sellar Recompensas 🔐</button>
+                <button class="btn-arcade-soft" style="border-color:#ff4d4d; color:#ff4d4d; font-family:'Poppins';" onclick="closeAdmin()">Cerrar</button>
+            </div>
+
         </div>
     </div>
 
@@ -300,7 +365,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const PREMIOS = {
+        // --- SISTEMA PREMIOS DUAL (INNOVACIÓN 5) ---
+        const BASE_PREMIOS = {
             100: { t: "Cena donde ella elija", v: "Cantares 2:10", i: "🍕" }, 200: { t: "Hacerse las uñas", v: "Cantares 4:7", i: "💅" },
             300: { t: "Masaje hecho por mi", v: "Rut 1:16", i: "💆‍♀️" }, 400: { t: "Salida a donde ella elija", v: "Proverbios 31:29", i: "🚗" },
             500: { t: "Comida preparada por mi", v: "Salmos 143:8", i: "🍳" }, 600: { t: "Peluche que ella quiera", v: "1 Corintios 13:4", i: "🧸" },
@@ -308,8 +374,57 @@
             900: { t: "El Tocador", v: "Cantares 8:7", i: "🪞" }, 1000: { t: "Tu Deseo Especial", v: "1 Juan 4:19", i: "✨" }
         };
 
+        function getActivePremios(jugadorActual) {
+            let active = {};
+            for(let k in BASE_PREMIOS) {
+                // Si juega Negrito, lee los premios que configuró la novia en su admin
+                if (jugadorActual === 'negrito') {
+                    let customT = localStorage.getItem('vip_prize_for_him_' + k);
+                    active[k] = { ...BASE_PREMIOS[k], t: customT || `Premio Secreto Nivel ${k}` };
+                } else {
+                    // Si juega Negrita, ve los premios por defecto
+                    active[k] = BASE_PREMIOS[k];
+                }
+            }
+            return active;
+        }
+
         let currentPlayer = "", globalScores = { negrito: 0, negrita: 0 };
         let miPersonaje = "👸🏾", miObjetivo = "🧔", isAdminTest = false;
+        let engineConfig = { speedMult: 1, spawnMult: 1 }; // Hacker variables
+
+        // --- INNOVACIÓN 1: TILT EFECT (3D Card) ---
+        const card = document.getElementById('main-card');
+        document.addEventListener('mousemove', (e) => {
+            if(document.getElementById('main-view').style.display !== 'none') {
+                let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+                let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+                card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            }
+        });
+        document.addEventListener('touchmove', (e) => {
+            if(document.getElementById('main-view').style.display !== 'none') {
+                let xAxis = (window.innerWidth / 2 - e.touches[0].clientX) / 25;
+                let yAxis = (window.innerHeight / 2 - e.touches[0].clientY) / 25;
+                card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            }
+        });
+        // Reset tilt on touch end
+        document.addEventListener('touchend', () => { card.style.transform = `rotateY(0deg) rotateX(0deg)`; });
+        document.addEventListener('mouseleave', () => { card.style.transform = `rotateY(0deg) rotateX(0deg)`; });
+
+        // ANIMACIONES DE MODALES
+        window.openModalWithAnim = (id) => {
+            const m = document.getElementById(id);
+            m.style.display = 'flex';
+            setTimeout(() => m.classList.add('active'), 10);
+        };
+        window.closeModalWithAnim = (id) => {
+            const m = document.getElementById(id);
+            m.classList.remove('active');
+            setTimeout(() => m.style.display = 'none', 300);
+        };
+        window.closeModal = (id) => { document.getElementById(id).classList.remove('active'); setTimeout(() => document.getElementById(id).style.display = 'none', 300); };
 
         const audioPoema = document.getElementById('audio-poema');
         const audioJuego = document.getElementById('audio-game');
@@ -333,12 +448,16 @@
                 osc.start(now); osc.stop(now+0.3);
             } else if(type === 'hit') {
                 osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, now); osc.frequency.exponentialRampToValueAtTime(50, now+0.3);
-                gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now+0.3);
+                gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0, now+0.3);
                 osc.start(now); osc.stop(now+0.3);
             } else if(type === 'explosion') {
-                osc.type = 'square'; osc.frequency.setValueAtTime(100, now); osc.frequency.exponentialRampToValueAtTime(10, now+0.5);
-                gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now+0.5);
-                osc.start(now); osc.stop(now+0.5);
+                osc.type = 'square'; osc.frequency.setValueAtTime(100, now); osc.frequency.exponentialRampToValueAtTime(10, now+0.8);
+                gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now+0.8);
+                osc.start(now); osc.stop(now+0.8);
+            } else if (type === 'boss_hit') {
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(200, now); osc.frequency.exponentialRampToValueAtTime(100, now+0.2);
+                gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now+0.2);
+                osc.start(now); osc.stop(now+0.2);
             }
         }
 
@@ -362,6 +481,8 @@
                 globalScores = docSnap.data();
                 document.getElementById('rec-negrito').innerText = globalScores.negrito || 0;
                 document.getElementById('rec-negrita').innerText = globalScores.negrita || 0;
+                document.getElementById('admin-score-negrito').innerText = globalScores.negrito || 0;
+                document.getElementById('admin-score-negrita').innerText = globalScores.negrita || 0;
                 updateVsMsg();
             }
         });
@@ -377,46 +498,58 @@
             if (score > (globalScores[currentPlayer] || 0)) await setDoc(doc(db, "competencia", "puntos"), { [currentPlayer]: score }, { merge: true });
         }
 
-        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
-        window.openRules = () => document.getElementById('rules-modal').style.display = 'flex';
-        
         window.startRead = () => {
             document.getElementById('main-view').style.display = 'none'; document.getElementById('ticket-ui').style.display = 'none'; 
-            document.getElementById('read-view').style.display = 'flex'; playMusic('poema');
+            const rv = document.getElementById('read-view');
+            rv.style.display = 'flex';
+            setTimeout(() => rv.classList.add('active'), 10);
+            playMusic('poema');
         };
 
-        // FIX: Transición suave de vuelta al menú (Sin recargar la página)
         window.closeRead = () => {
             stopMusic();
-            document.getElementById('read-view').style.display = 'none';
-            document.getElementById('main-view').style.display = 'block';
-            document.getElementById('ticket-ui').style.display = 'flex';
+            const rv = document.getElementById('read-view');
+            rv.classList.remove('active');
+            setTimeout(() => {
+                rv.style.display = 'none';
+                document.getElementById('main-view').style.display = 'block';
+                document.getElementById('ticket-ui').style.display = 'flex';
+            }, 500);
         };
 
         window.closeGameToMenu = (modalId) => {
-            closeModal(modalId);
+            closeModalWithAnim(modalId);
             stopMusic();
             document.getElementById('game-view').style.display = 'none';
             document.getElementById('main-view').style.display = 'block';
             document.getElementById('ticket-ui').style.display = 'flex';
-            gameActive = false; // Detiene el bucle del juego
-        };
-        
-        window.showTutorial = () => {
-            document.getElementById('main-view').style.display = 'none'; document.getElementById('ticket-ui').style.display = 'none';
-            document.getElementById('game-tutorial').style.display = 'flex';
+            gameActive = false;
         };
 
         window.openVault = () => {
-            document.getElementById('vault-view').style.display = 'block'; const container = document.getElementById('coupon-container'); container.innerHTML = '';
-            Object.keys(PREMIOS).forEach(pts => {
-                const isUnlocked = localStorage.getItem('coupon_'+pts), p = PREMIOS[pts], wishText = localStorage.getItem('deseo_1000');
-                container.innerHTML += `<div class="coupon-item ${isUnlocked ? 'unlocked' : ''}"><div class="coupon-icon">${isUnlocked ? p.i : '❓'}</div><div class="coupon-details"><h3 style="font-family:'Poppins'">${isUnlocked ? (pts === "1000" && wishText ? wishText : p.t) : 'Premio Sorpresa'}</h3><p>${isUnlocked ? p.v : 'Bloqueado.'}</p></div></div>`;
+            const vv = document.getElementById('vault-view');
+            vv.style.display = 'block';
+            setTimeout(() => vv.classList.add('active'), 10);
+            
+            const container = document.getElementById('coupon-container'); container.innerHTML = '';
+            
+            // Usar premios según quién esté mirando
+            // Por defecto, si no ha elegido, mostramos los base para que vea la estructura
+            const displayPremios = currentPlayer ? getActivePremios(currentPlayer) : BASE_PREMIOS;
+
+            Object.keys(displayPremios).forEach(pts => {
+                const isUnlocked = localStorage.getItem('coupon_'+pts);
+                const p = displayPremios[pts];
+                const wishText = localStorage.getItem('deseo_1000');
+                container.innerHTML += `<div class="coupon-item ${isUnlocked ? 'unlocked pop-in' : 'pop-in'}" style="animation-delay: ${pts/10000}s"><div class="coupon-icon">${isUnlocked ? p.i : '❓'}</div><div class="coupon-details"><h3 style="font-family:'Poppins'">${isUnlocked ? (pts === "1000" && wishText ? wishText : p.t) : 'Premio Sorpresa'}</h3><p>${isUnlocked ? p.v : 'Bloqueado.'}</p></div></div>`;
             });
         };
-        window.closeVault = () => document.getElementById('vault-view').style.display = 'none';
+        window.closeVault = () => { 
+            const vv = document.getElementById('vault-view');
+            vv.classList.remove('active');
+            setTimeout(() => vv.style.display = 'none', 300);
+        };
 
-        // --- DIBUJO DEL ÁRBOL RESTAURADO EXACTAMENTE AL ORIGINAL (150X150) ---
         const tCanvas = document.getElementById('treeCanvas'), tCtx = tCanvas.getContext('2d');
         function drawTree() {
             tCtx.clearRect(0,0,150,150);
@@ -434,47 +567,108 @@
         }
         drawTree();
 
+        // --- INNOVACIÓN 4: PANEL ADMIN RBAC ---
         let taps = 0, tapTimeout;
-        window.adminTouch = () => { taps++; clearTimeout(tapTimeout); if(taps >= 5) { document.getElementById('admin-panel').style.display = 'flex'; taps = 0; } else { tapTimeout = setTimeout(() => { taps = 0; }, 2000); } };
-        window.adminResetScores = async () => { if(confirm("¿WIPE FIREBASE?")) { await setDoc(doc(db, "competencia", "puntos"), { negrito: 0, negrita: 0 }); } };
-        window.adminResetCoupons = () => { if(confirm("¿WIPE LOCAL?")) { Object.keys(PREMIOS).forEach(k => localStorage.removeItem('coupon_'+k)); } };
+        window.adminTouch = () => { 
+            taps++; clearTimeout(tapTimeout); 
+            if(taps >= 5) { 
+                document.getElementById('admin-login-view').style.display = 'block';
+                document.getElementById('admin-dev-view').style.display = 'none';
+                document.getElementById('admin-vip-view').style.display = 'none';
+                document.getElementById('admin-user').value = '';
+                document.getElementById('admin-pass').value = '';
+                openModalWithAnim('admin-panel'); 
+                taps = 0; 
+            } else { tapTimeout = setTimeout(() => { taps = 0; }, 2000); } 
+        };
 
-        // --- SISTEMA DE JUEGO PRINCIPAL ---
+        window.attemptLogin = () => {
+            const u = document.getElementById('admin-user').value.toLowerCase();
+            const p = document.getElementById('admin-pass').value;
+            
+            if (u === 'jostin' && p === 'god') {
+                document.getElementById('admin-login-view').style.display = 'none';
+                document.getElementById('admin-dev-view').style.display = 'block';
+            } else if (u === 'reina' && p === '1234') {
+                document.getElementById('admin-login-view').style.display = 'none';
+                buildVipInputs();
+                document.getElementById('admin-vip-view').style.display = 'block';
+            } else {
+                alert("ACCESS DENIED");
+            }
+        };
+
+        window.closeAdmin = () => closeModalWithAnim('admin-panel');
+
+        window.adminResetScores = async () => { if(confirm("¿WIPE FIREBASE?")) { await setDoc(doc(db, "competencia", "puntos"), { negrito: 0, negrita: 0 }); } };
+        window.adminResetCoupons = () => { if(confirm("¿WIPE LOCAL DATA?")) { Object.keys(BASE_PREMIOS).forEach(k => { localStorage.removeItem('coupon_'+k); localStorage.removeItem('vip_prize_for_him_'+k); }); localStorage.removeItem('deseo_1000'); location.reload(); } };
+        window.toggleGodMode = () => { isInvincible = !isInvincible; alert("🕹️ GOD MODE: " + (isInvincible ? "ON" : "OFF")); };
+        window.maxPowerHacker = () => { power = 100; updateUI(); alert("💣 BATERÍA AL 100%"); };
+
+        function buildVipInputs() {
+            const container = document.getElementById('vip-inputs-container');
+            container.innerHTML = '';
+            for(let i=100; i<=1000; i+=100) {
+                let saved = localStorage.getItem('vip_prize_for_him_' + i) || "";
+                container.innerHTML += `
+                    <div style="margin-bottom:10px;">
+                        <label style="font-size:0.75rem; color:#fff; font-family:'Poppins';">Para Nivel ${i}:</label>
+                        <input type="text" id="vip-for-him-${i}" value="${saved}" placeholder="Ej. Yo invito la pizza" style="width:100%; padding:8px; border-radius:5px; border:1px solid var(--pink); background:#222; color:#fff; font-family:'Poppins'; font-size:0.8rem; margin-top:3px; outline:none;">
+                    </div>
+                `;
+            }
+        }
+
+        window.saveVipConfig = () => {
+            for(let i=100; i<=1000; i+=100) {
+                let val = document.getElementById(`vip-for-him-${i}`).value.trim();
+                if(val) localStorage.setItem('vip_prize_for_him_' + i, val);
+            }
+            alert("🔐 ¡Listo hermosa! Premios guardados en secreto.");
+            closeAdmin();
+        };
+
+        // --- SISTEMA DE JUEGO (MOTOR) ---
         const gCanvas = document.getElementById('gameCanvas'), gCtx = gCanvas.getContext('2d');
         let playerX = 0, score = 0, gameActive = false, items = [], boss = null;
         let lives = 3, isInvincible = false, power = 0;
+        
+        // INNOVACIÓN 2: Físicas de Partículas y Parallax Estrellas
+        let particlesSystem = [];
+        let stars = [];
+        for(let i=0; i<50; i++) stars.push({x: Math.random()*window.innerWidth, y: Math.random()*window.innerHeight, s: Math.random()*2+0.5, a: Math.random()});
 
         window.prepareMission = (player) => {
             currentPlayer = player; isAdminTest = false;
             miPersonaje = player === 'negrita' ? "👸🏾" : "🧔"; miObjetivo = player === 'negrita' ? "🧔" : "👸🏾";
             document.getElementById('mission-emoji').innerText = miObjetivo;
             document.getElementById('mission-text').innerText = `Atrapa a ${player==='negrita'?'Negrito':'Negrita'}. Cuidado con los impostores y recuerda usar la Bomba.`;
-            closeModal('game-tutorial'); document.getElementById('mission-modal').style.display = 'flex';
+            closeModalWithAnim('game-tutorial'); openModalWithAnim('mission-modal');
         };
 
-        window.startMission = () => { closeModal('mission-modal'); playMusic('juego'); initGameData(); };
-        window.restartGame = () => { closeModal('game-over-modal'); initGameData(); };
+        window.startMission = () => { closeModalWithAnim('mission-modal'); playMusic('juego'); initGameData(); };
+        window.restartGame = () => { closeModalWithAnim('game-over-modal'); initGameData(); };
 
         function initGameData() {
             document.getElementById('game-view').style.display = 'block';
             setTimeout(() => {
                 gCanvas.width = window.innerWidth; gCanvas.height = window.innerHeight;
-                playerX = gCanvas.width / 2; gameActive = true; score = 0; items = []; boss = null;
+                playerX = gCanvas.width / 2; gameActive = true; score = 0; items = []; boss = null; particlesSystem = [];
                 lives = 3; power = 0; updateUI(); updateVsMsg(); gameLoop();
             }, 50);
         }
 
         window.adminTestBoss = () => {
-            const pts = parseInt(document.getElementById('admin-boss-select').value); closeModal('admin-panel'); isAdminTest = true; currentPlayer = 'negrito'; miPersonaje = "🧔"; miObjetivo = "👸🏾";
+            const pts = parseInt(document.getElementById('admin-boss-select').value); closeAdmin(); isAdminTest = true; currentPlayer = 'negrito'; miPersonaje = "🧔"; miObjetivo = "👸🏾";
             document.getElementById('main-view').style.display = 'none'; document.getElementById('ticket-ui').style.display = 'none'; playMusic('juego');
             setTimeout(() => {
                 gCanvas.width = window.innerWidth; gCanvas.height = window.innerHeight; playerX = gCanvas.width / 2;
-                score = pts - 1; items = []; boss = null; lives = 3; power = 100; gameActive = true;
+                score = pts - 1; items = []; boss = null; particlesSystem = []; lives = 3; power = 100; gameActive = true;
                 updateUI(); document.getElementById('game-view').style.display = 'block'; gameLoop();
             }, 50);
         };
 
-        window.continueGame = () => { document.getElementById('reward-modal').style.display = 'none'; gameActive = true; items = []; boss = null; score++; document.getElementById('score').innerText = score; gameLoop(); };
+        window.continueGame = () => { closeModalWithAnim('reward-modal'); gameActive = true; items = []; boss = null; particlesSystem = []; score++; document.getElementById('score').innerText = score; gameLoop(); };
         window.saveWish = () => { const input = document.getElementById('wish-input').value; if(input.trim()) { localStorage.setItem('deseo_1000', input); location.reload(); } }
 
         gCanvas.addEventListener('touchmove', (e) => { if(gameActive) playerX = e.touches[0].clientX; e.preventDefault(); }, {passive: false});
@@ -489,47 +683,104 @@
             else { document.getElementById('super-btn').style.display = 'none'; document.getElementById('power-bar').style.background = "var(--pink)"; }
         }
 
+        // INNOVACIÓN 2: SCREEN SHAKE Y EXPLOSIONES REALISTAS
+        function screenShake() {
+            const container = document.getElementById('game-container');
+            container.classList.remove('shake');
+            void container.offsetWidth; // trigger reflow
+            container.classList.add('shake');
+        }
+
         window.activateSuperPower = () => {
             if(power >= 100 && gameActive) {
-                power = 0; updateUI(); playSFX('explosion');
-                createExplosion(gCanvas.width/2, gCanvas.height/2, "💥", true); 
+                power = 0; updateUI(); playSFX('explosion'); screenShake();
+                createExplosion(gCanvas.width/2, gCanvas.height/2, "💥", 20, true); 
                 for(let i=items.length-1; i>=0; i--) {
-                    if(!items[i].isMe && !items[i].isBonus) { createExplosion(items[i].x, items[i].y, "✨"); items.splice(i, 1); }
+                    if(!items[i].isMe && !items[i].isBonus) { createExplosion(items[i].x, items[i].y, "✨", 5); items.splice(i, 1); }
                 }
+                if(boss) { boss.hp -= 3; playSFX('boss_hit'); createExplosion(boss.x, boss.y, "🔥", 10); checkBossDead(); }
             }
         }
 
-        function createExplosion(x, y, type="💥", giant=false) {
-            let particles = type === "✨" ? ["✨", "🌟", "💖"] : ["💥", "🔥", "💨"];
-            gCtx.font = giant ? "150px serif" : "40px serif"; gCtx.fillText(particles[Math.floor(Math.random()*particles.length)], x, giant ? y : y - 20);
+        function createExplosion(x, y, type="💥", amount=5, giant=false) {
+            let pTypes = type === "✨" ? ["✨", "🌟", "💖"] : ["💥", "🔥", "💨"];
+            for(let i=0; i<amount; i++) {
+                particlesSystem.push({
+                    x: x, y: y,
+                    vx: (Math.random() - 0.5) * (giant ? 20 : 10),
+                    vy: (Math.random() - 0.5) * (giant ? 20 : 10),
+                    life: 1, decay: Math.random() * 0.05 + 0.02,
+                    char: pTypes[Math.floor(Math.random()*pTypes.length)],
+                    size: giant ? 60 + Math.random()*40 : 20 + Math.random()*20
+                });
+            }
         }
 
         function triggerDamage() {
             if(isInvincible) return;
-            playSFX('hit'); lives--; updateUI();
-            if(lives <= 0) { gameActive = false; document.getElementById('game-over-modal').style.display = 'flex'; } 
+            playSFX('hit'); screenShake(); lives--; updateUI();
+            if(lives <= 0) { gameActive = false; openModalWithAnim('game-over-modal'); } 
             else { isInvincible = true; setTimeout(() => { isInvincible = false; }, 2000); }
         }
 
+        // --- INNOVACIÓN 3: 10 PATRONES DE IA PARA JEFES ---
         function spawnBoss(level) {
             document.getElementById('scoreboard-normal').style.display = 'none';
             document.getElementById('boss-warning').style.display = 'block';
             setTimeout(() => document.getElementById('boss-warning').style.display = 'none', 2000);
             
-            let maxHp = 5 + Math.floor(level/100); 
-            let bEmoji = level === 100 ? "👽" : "🤖";
+            let maxHp = 5 + Math.floor(level/100) * 2; 
+            let bEmoji = ["👽","🤖","👹","👺","👾","🎃","👿","☠️","🦹","👁️"][Math.floor(level/100)-1] || "😈";
             
-            boss = { x: gCanvas.width/2, y: 120, vx: 2, vy: 0, hp: maxHp, maxHp: maxHp, emoji: bEmoji, level: level, timer: 0, state: 'tracking' };
+            boss = { x: gCanvas.width/2, y: -100, vx: 2, vy: 2, hp: maxHp, maxHp: maxHp, emoji: bEmoji, level: level, timer: 0, state: 'intro', startX: gCanvas.width/2 };
+        }
+
+        function checkBossDead() {
+            if (boss && boss.hp <= 0) {
+                playSFX('explosion'); screenShake(); createExplosion(boss.x, boss.y, "💥💥💥", 30, true); gameActive = false; document.getElementById('scoreboard-normal').style.display = 'block';
+                if (isAdminTest || currentPlayer === 'negrito') { setTimeout(() => { alert("¡JEFE DESTRUIDO!"); score++; document.getElementById('score').innerText = score; boss = null; items = []; gameActive = true; gameLoop(); }, 800); return; }
+                
+                let cupScore = score + 1; localStorage.setItem('coupon_'+cupScore, 'true');
+                setTimeout(() => {
+                    if(cupScore === 1000) { openModalWithAnim('wish-modal'); } 
+                    else { 
+                        let activePrizes = getActivePremios('negrita'); // Si llega aqui es negrita
+                        document.getElementById('reward-icon').innerText = activePrizes[cupScore].i; 
+                        document.getElementById('reward-title').innerText = activePrizes[cupScore].t; 
+                        document.getElementById('reward-verse').innerText = activePrizes[cupScore].v; 
+                        openModalWithAnim('reward-modal'); 
+                    }
+                }, 1000);
+            }
         }
 
         function gameLoop() {
             if(!gameActive) return;
             gCtx.fillStyle = '#050510'; gCtx.fillRect(0,0,gCanvas.width, gCanvas.height); gCtx.textAlign = "center"; gCtx.textBaseline = "middle";
             
-            if(power < 100 && !boss) { power += 0.05; updateUI(); } 
+            // PARALLAX ESTRELLAS
+            gCtx.fillStyle = "white";
+            for(let s of stars) {
+                s.y += s.s * engineConfig.speedMult;
+                if(s.y > gCanvas.height) { s.y = 0; s.x = Math.random()*gCanvas.width; }
+                gCtx.globalAlpha = s.a;
+                gCtx.beginPath(); gCtx.arc(s.x, s.y, s.s, 0, Math.PI*2); gCtx.fill();
+            }
+            gCtx.globalAlpha = 1;
 
+            if(power < 100 && !boss) { power += 0.05 * engineConfig.speedMult; updateUI(); } 
+
+            // Jugador (Tilt dinámico según posición)
             if(isInvincible) gCtx.globalAlpha = Math.sin(Date.now() / 100) > 0 ? 1 : 0.3;
-            gCtx.font = "55px serif"; gCtx.fillText(miPersonaje, playerX, gCanvas.height - 80); gCtx.globalAlpha = 1;
+            gCtx.font = "55px serif"; 
+            
+            gCtx.save();
+            gCtx.translate(playerX, gCanvas.height - 80);
+            let tilt = (playerX - gCanvas.width/2) * 0.05; // Inclinar al mover
+            gCtx.rotate(tilt * Math.PI / 180);
+            gCtx.fillText(miPersonaje, 0, 0);
+            gCtx.restore();
+            gCtx.globalAlpha = 1;
 
             let nextMilestone = score + 1;
             let isBossBeaten = (currentPlayer === 'negrita' && !isAdminTest) ? localStorage.getItem('coupon_' + nextMilestone) : false;
@@ -537,48 +788,96 @@
             if (nextMilestone % 100 === 0 && !isBossBeaten && !boss) spawnBoss(nextMilestone);
 
             if (boss) {
-                boss.timer++;
+                boss.timer += engineConfig.speedMult;
 
-                if (boss.level === 100) {
-                    if (boss.state === 'tracking') {
-                        boss.x += (playerX - boss.x) * 0.03;
-                        if (boss.timer % 120 === 0) { boss.state = 'warning'; boss.warningTimer = 30; } 
-                        if (boss.timer % 50 === 0) items.push({ x: boss.x, y: boss.y + 30, s: 6, sticker: "💣", type: "enemy", size: 50 });
-                        if (boss.timer % 180 === 0) items.push({ x: boss.x, y: boss.y + 30, s: 5, sticker: miObjetivo, isMe: true, size: 55 });
-                    } else if (boss.state === 'warning') {
-                        boss.warningTimer--;
-                        if(boss.warningTimer <= 0) { boss.state = 'charging'; boss.vy = 12; playSFX('hit'); }
-                    } else if (boss.state === 'charging') {
-                        boss.y += boss.vy;
-                        if(boss.y > gCanvas.height) { boss.y = -50; boss.state = 'recovering'; boss.vy = 4; boss.x = playerX; }
-                    } else if (boss.state === 'recovering') {
-                        boss.y += boss.vy; if(boss.y >= 120) { boss.y = 120; boss.state = 'tracking'; }
+                if (boss.state === 'intro') {
+                    boss.y += 3; if (boss.y >= 120) boss.state = 'active';
+                } else {
+                    // IA MULTI-NIVEL
+                    let lvl = boss.level;
+                    if(lvl === 100) { // Senoidal suave
+                        boss.x = boss.startX + Math.sin(boss.timer * 0.05) * 100;
+                        if(boss.timer % 60 < 2) items.push({ x: boss.x, y: boss.y, s: 6, sticker: "💣", type: "enemy" });
+                    } 
+                    else if(lvl === 200) { // Teleport
+                        if(boss.timer % 100 < 2) { boss.x = 50 + Math.random()*(gCanvas.width-100); createExplosion(boss.x, boss.y, "✨", 3); }
+                        if(boss.timer % 50 < 2) items.push({ x: boss.x, y: boss.y, s: 7, sticker: "⚡", type: "enemy" });
                     }
-                }
-                else if (boss.level >= 200) {
-                    boss.x += (playerX - boss.x) * 0.015;
-                    if (boss.timer % 60 === 0) {
-                        let dx = playerX - boss.x; let dy = (gCanvas.height - 80) - boss.y; let dist = Math.sqrt(dx*dx + dy*dy);
-                        items.push({ x: boss.x, y: boss.y, s: 8, dx: (dx/dist)*8, dy: (dy/dist)*8, sticker: "⚡", type: "directed", size: 45 });
-                        playSFX('hit');
+                    else if(lvl === 300) { // Rebote Paredes
+                        boss.x += boss.vx * 2; if(boss.x < 40 || boss.x > gCanvas.width-40) boss.vx *= -1;
+                        if(boss.timer % 40 < 2) items.push({ x: boss.x, y: boss.y, s: 5, sticker: "🔥", type: "enemy" });
                     }
-                    if (boss.timer % 200 === 0) items.push({ x: boss.x, y: boss.y, s: 5, sticker: miObjetivo, isMe: true, size: 55 });
+                    else if(lvl === 400) { // Sniper (Dirigidos)
+                        boss.x += (playerX - boss.x) * 0.02;
+                        if(boss.timer % 80 < 2) {
+                            let dx = playerX - boss.x, dy = (gCanvas.height-80) - boss.y, dist = Math.sqrt(dx*dx + dy*dy);
+                            items.push({ x: boss.x, y: boss.y, s: 8, dx: (dx/dist)*8, dy: (dy/dist)*8, sticker: "🎯", type: "directed" });
+                        }
+                    }
+                    else if(lvl === 500) { // Figura 8
+                        boss.x = boss.startX + Math.sin(boss.timer * 0.05) * 120;
+                        boss.y = 120 + Math.sin(boss.timer * 0.1) * 50;
+                        if(boss.timer % 30 < 2) items.push({ x: boss.x, y: boss.y, s: 6, sticker: "🔪", type: "enemy" });
+                    }
+                    else if(lvl === 600) { // Caótico (Dispara en todas direcciones)
+                        boss.x += (Math.random()-0.5)*10;
+                        if(boss.timer % 50 < 2) {
+                            for(let i=0; i<3; i++) {
+                                let ang = Math.random() * Math.PI;
+                                items.push({ x: boss.x, y: boss.y, s: 6, dx: Math.cos(ang)*6, dy: Math.sin(ang)*6, sticker: "🌪️", type: "directed" });
+                            }
+                        }
+                    }
+                    else if(lvl === 700) { // Doble Rebote Rápido
+                        boss.x += boss.vx * 3; boss.y += boss.vy * 2;
+                        if(boss.x < 40 || boss.x > gCanvas.width-40) boss.vx *= -1;
+                        if(boss.y < 50 || boss.y > 200) boss.vy *= -1;
+                        if(boss.timer % 35 < 2) items.push({ x: boss.x, y: boss.y, s: 7, sticker: "💉", type: "enemy" });
+                    }
+                    else if(lvl === 800) { // Lluvia (Boss arriba estático, mucha lluvia)
+                        boss.x = gCanvas.width/2;
+                        if(boss.timer % 15 < 2) items.push({ x: Math.random()*gCanvas.width, y: 0, s: 9, sticker: "💧", type: "enemy" });
+                    }
+                    else if(lvl === 900) { // Velocista pegajoso
+                        boss.x += (playerX - boss.x) * 0.08;
+                        if(boss.timer % 60 < 2) { boss.vy = 15; boss.state = 'smash'; }
+                        if(boss.state === 'smash') {
+                            boss.y += boss.vy; if(boss.y > gCanvas.height) { boss.y = 100; boss.state = 'active'; createExplosion(boss.x, gCanvas.height, "💥", 10); screenShake(); }
+                        }
+                    }
+                    else if(lvl === 1000) { // DIOS (Combina 400 y 800)
+                        boss.x = boss.startX + Math.sin(boss.timer * 0.03) * 100;
+                        if(boss.timer % 40 < 2) {
+                            let dx = playerX - boss.x, dy = (gCanvas.height-80) - boss.y, dist = Math.sqrt(dx*dx + dy*dy);
+                            items.push({ x: boss.x, y: boss.y, s: 10, dx: (dx/dist)*10, dy: (dy/dist)*10, sticker: "👁️", type: "directed" });
+                        }
+                        if(boss.timer % 30 < 2) items.push({ x: Math.random()*gCanvas.width, y: 0, s: 7, sticker: "🔥", type: "enemy" });
+                    }
+
+                    // Recompensa del jefe para dañarlo
+                    if (boss.timer % 150 < 2 && boss.state !== 'smash') items.push({ x: boss.x, y: boss.y + 30, s: 5, sticker: miObjetivo, isMe: true, size: 55 });
                 }
 
-                if(boss.state === 'warning') gCtx.fillStyle = boss.timer % 5 === 0 ? "red" : "white";
-                gCtx.font = "80px serif"; gCtx.fillText(boss.emoji, boss.x, boss.y); gCtx.fillStyle = "white";
+                // Dibujar Jefe
+                gCtx.save();
+                gCtx.translate(boss.x, boss.y);
+                gCtx.rotate(Math.sin(boss.timer * 0.1) * 0.2); // Pequeño tambaleo natural
+                gCtx.font = "80px serif"; gCtx.fillText(boss.emoji, 0, 0); 
+                gCtx.restore();
                 
+                // Barra HP
                 let barW = 100;
-                gCtx.fillStyle = "red"; gCtx.fillRect(boss.x - barW/2, boss.y - 65, barW, 8);
+                gCtx.fillStyle = "rgba(255,0,0,0.5)"; gCtx.fillRect(boss.x - barW/2, boss.y - 65, barW, 8);
                 gCtx.fillStyle = "#00ff00"; gCtx.fillRect(boss.x - barW/2, boss.y - 65, barW * (boss.hp / boss.maxHp), 8);
 
-                if (boss.state === 'charging' && !isInvincible) {
-                    if(Math.sqrt(Math.pow(boss.x - playerX, 2) + Math.pow(boss.y - (gCanvas.height - 80), 2)) < 60) triggerDamage();
+                // Colision fisica jefe
+                if (boss.state === 'smash' && !isInvincible) {
+                    if(Math.sqrt(Math.pow(boss.x - playerX, 2) + Math.pow(boss.y - (gCanvas.height - 80), 2)) < 70) triggerDamage();
                 }
 
             } else {
-                let speedBase = 3.5 + (score/40); 
-                let spawnRate = Math.min(0.06, 0.02 + (score/1500)); 
+                let speedBase = (3.5 + (score/40)) * engineConfig.speedMult; 
+                let spawnRate = Math.min(0.08, 0.02 + (score/1000)) * engineConfig.spawnMult; 
 
                 if(Math.random() < spawnRate) {
                     const r = Math.random();
@@ -590,44 +889,57 @@
                     else if(r < 0.35) { t = "me"; e = miObjetivo; isMe = true; } 
                     else { const imp = currentPlayer === 'negrita' ? ["🤡", "👽", "👨🏻"] : ["🤡", "👽", "👵🏽"]; e = imp[Math.floor(Math.random()*3)]; }
 
-                    items.push({ x: 40 + Math.random()*(gCanvas.width-80), y: -50, s: speedBase + Math.random()*1.5, sticker: e, type: t, isMe: isMe, isBonus: isBonus, size: 55, dx: dx });
+                    items.push({ x: 40 + Math.random()*(gCanvas.width-80), y: -50, s: speedBase + Math.random()*1.5, sticker: e, type: t, isMe: isMe, isBonus: isBonus, size: 55, dx: dx, r: 0, dr: (Math.random()-0.5)*0.1 });
                 }
             }
 
             for(let i=items.length-1; i>=0; i--) {
                 let it = items[i]; 
                 
-                if(it.type === "directed") { it.x += it.dx; it.y += it.dy; }
-                else if(it.type === "gold") { it.x += it.dx; it.y += it.s; if(it.x<20||it.x>gCanvas.width-20) it.dx*=-1; }
-                else if(it.type === "ghost") { it.y += it.s * 0.7; it.x += (playerX - it.x) * 0.015; }
-                else { it.y += it.s; }
+                if(it.type === "directed") { it.x += it.dx * engineConfig.speedMult; it.y += it.dy * engineConfig.speedMult; }
+                else if(it.type === "gold") { it.x += it.dx * engineConfig.speedMult; it.y += it.s * engineConfig.speedMult; if(it.x<20||it.x>gCanvas.width-20) it.dx*=-1; }
+                else if(it.type === "ghost") { it.y += it.s * 0.7 * engineConfig.speedMult; it.x += (playerX - it.x) * 0.015 * engineConfig.speedMult; }
+                else { it.y += it.s * engineConfig.speedMult; }
                 
-                gCtx.font = (it.size || 55) + "px serif"; gCtx.fillText(it.sticker, it.x, it.y);
+                it.r = (it.r || 0) + (it.dr || 0);
+
+                gCtx.save();
+                gCtx.translate(it.x, it.y);
+                gCtx.rotate(it.r);
+                gCtx.font = (it.size || 55) + "px serif"; gCtx.fillText(it.sticker, 0, 0);
+                gCtx.restore();
 
                 let hitboxR = (it.size || 55) * 0.45; let dx = it.x - playerX; let dy = it.y - (gCanvas.height - 80);
 
                 if(Math.sqrt(dx*dx + dy*dy) < hitboxR + 25) { 
-                    if(it.type === "1up") { lives = Math.min(lives + 1, 3); updateUI(); playSFX('1up'); createExplosion(it.x, it.y, "✨"); items.splice(i, 1); }
-                    else if(it.type === "gold") { score+=3; power+=15; updateUI(); playSFX('coin'); createExplosion(it.x, it.y, "✨"); items.splice(i, 1); }
+                    if(it.type === "1up") { lives = Math.min(lives + 1, 3); updateUI(); playSFX('1up'); createExplosion(it.x, it.y, "✨", 10); items.splice(i, 1); }
+                    else if(it.type === "gold") { score+=3; power+=15; updateUI(); playSFX('coin'); createExplosion(it.x, it.y, "✨", 10); items.splice(i, 1); }
                     else if(it.isMe) {
-                        items.splice(i, 1); createExplosion(it.x, it.y, "✨"); playSFX('coin');
+                        items.splice(i, 1); createExplosion(it.x, it.y, "✨", 5); playSFX('coin');
 
                         if (boss) {
                             boss.hp--;
-                            if (boss.hp <= 0) {
-                                playSFX('explosion'); createExplosion(boss.x, boss.y, "💥💥💥", true); gameActive = false; document.getElementById('scoreboard-normal').style.display = 'block';
-                                if (isAdminTest || currentPlayer === 'negrito') { setTimeout(() => { alert("¡JEFE DESTRUIDO!"); score++; document.getElementById('score').innerText = score; boss = null; items = []; gameActive = true; gameLoop(); }, 800); return; }
-                                let cupScore = score + 1; localStorage.setItem('coupon_'+cupScore, 'true');
-                                setTimeout(() => {
-                                    if(cupScore === 1000) { document.getElementById('wish-modal').style.display = 'flex'; } 
-                                    else { document.getElementById('reward-icon').innerText = PREMIOS[cupScore].i; document.getElementById('reward-title').innerText = PREMIOS[cupScore].t; document.getElementById('reward-verse').innerText = PREMIOS[cupScore].v; document.getElementById('reward-modal').style.display = 'flex'; }
-                                }, 1000); return;
-                            }
+                            playSFX('boss_hit'); createExplosion(boss.x, boss.y, "💥", 5);
+                            checkBossDead();
                         } else { score++; document.getElementById('score').innerText = score; saveScore(score); power += 3; updateUI(); }
                     } else { items.splice(i, 1); triggerDamage(); if(!gameActive) return; }
                 }
                 if(it.y > gCanvas.height + (it.size || 55) || it.x < -50 || it.x > gCanvas.width+50) items.splice(i, 1);
             }
+
+            // Dibujar Particulas (Gravedad y Desvanecimiento)
+            for(let i=particlesSystem.length-1; i>=0; i--) {
+                let p = particlesSystem[i];
+                p.x += p.vx; p.y += p.vy;
+                p.vy += 0.5; // Gravedad
+                p.life -= p.decay;
+                if(p.life <= 0) { particlesSystem.splice(i, 1); continue; }
+                gCtx.globalAlpha = p.life;
+                gCtx.font = p.size + "px serif";
+                gCtx.fillText(p.char, p.x, p.y);
+            }
+            gCtx.globalAlpha = 1;
+
             requestAnimationFrame(gameLoop);
         }
     </script>
